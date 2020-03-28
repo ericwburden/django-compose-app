@@ -1,0 +1,71 @@
+{% extends "./base.html" %}
+
+{% block title %} Completed Opportunities {% endblock %}
+
+{% block content %}
+  
+  <h1 class="display-4">Completed Opportunities</h1>
+    
+  {% if quest_list %}
+    <div class="row mt-5">
+      <div class="accordion" id="completedOpportunities" style="width:100%;">
+
+        {% for quest in quest_list %}
+          <div class="card">
+            <div class="card-header" id="heading{{quest.id}}">
+              <h2 class="mb-0">
+                <button class="btn btn-outline-primary btn-block" type="button" data-toggle="collapse" data-target="#collapse{{quest.id}}" aria-expanded="true" aria-controls="collapse{{quest.id}}">
+                  {{quest.topic}}
+                </button>
+              </h2>
+            </div>
+        
+            <div id="collapse{{quest.id}}" class="collapse show" aria-labelledby="heading{{quest.id}}" data-parent="#completedOpportunities">
+              <div class="card-body">
+                <dl>
+                  <dt>Description</dt>
+                  <dd><em>{{ quest.description }}</em></dd>
+                  <dt>Contact</dt>
+                  <dd>
+                    <ul>
+                      <li><b>Contact: </b>{{ quest.contact_name }}</li>
+                      <li><b>E-Mail: </b>{{ quest.contact_email }}</li>
+                      <li><b>Phone #: </b>{{ quest.contact_phone }}</li>
+                    </ul>
+                  </dd>
+                  {% if quest.accepted %}
+                    <dt>Acceptance Info</dt>
+                    <dd>
+                      <ul>
+                        <li><b>Accepted On: </b>{{ quest.accepted_at }}</li>
+                        <li><b>E-Mail: </b>{{ quest.accepted_by_email }}</li>
+                        <li><b>Phone #: </b>{{ quest.accepted_by_phone }}</li>
+                      </ul>
+                    </dd>
+                  {% endif %}
+                  <dt>Other Information</dt>
+                  <dd>
+                    <ul>
+                      <li><b>Priority: </b>{{ quest.priority }}/10</li>
+                      <li><b>Days to Fulfill: </b>{{ quest.days_allowed }}</li>
+                      <li><b>Posted: {{ quest.created_at }}</b>
+                      {% if quest.reposted %}
+                        <li><b>Reposted: {{ quest.reposted_at }}</b></li>
+                      {% endif %}
+                      {% if quest.completed %}
+                        <li><b>Completed: {{ quest.completed_at }}</b></li>
+                      {% endif %}
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+  {% else %}
+      <h2 class="text-center mt-5">Nothing here for now.</h2>
+  {% endif %}
+{% endblock %}

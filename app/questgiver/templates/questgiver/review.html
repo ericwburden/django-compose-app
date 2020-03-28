@@ -1,0 +1,67 @@
+{% extends "./base.html" %}
+
+{% block title %}{{ quest.topic }}{% endblock %}
+
+{% block content %}
+  <h2>{{ quest.topic }}</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Opportunity Details</h5>
+      <p class="card-text">
+        <dl>
+          <dt>Description</dt>
+          <dd>{{ quest.description }}</dd>
+          <dt>Contact</dt>
+          <dd>
+            <ul>
+              <li><b>Contact: </b>{{ quest.contact_name }}</li>
+              <li><b>E-Mail: </b>{{ quest.contact_email }}</li>
+              <li><b>Phone #: </b>{{ quest.contact_phone }}</li>
+            </ul>
+          </dd>
+          {% if quest.accepted %}
+            <dt>Acceptance Info</dt>
+            <dd>
+              <ul>
+                <li><b>Accepted On: </b>{{ quest.accepted_at }}</li>
+                <li><b>E-Mail: </b>{{ quest.accepted_by_email }}</li>
+                <li><b>Phone #: </b>{{ quest.accepted_by_phone }}</li>
+              </ul>
+            </dd>
+          {% endif %}
+          <dt>Other Information</dt>
+          <dd>
+            <ul>
+              <li><b>Priority: </b>{{ quest.priority }}/10</li>
+              <li><b>Days to Fulfill: </b>{{ quest.days_allowed }}</li>
+              <li><b>Posted: </b>
+                {% if quest.reposted %}
+                  {{ quest.reposted_at }}
+                {% else %}
+                  {{ quest.created_at }}
+                {% endif %}
+              </li>
+              {% if quest.is_overdue %}
+                <li><b>Days Overdue: </b>{{ quest.days_overdue }} days</li>
+              {% endif %}
+            </ul>
+          </dd>
+        </dl>
+      </p>
+      <div class="card-footer text-muted">
+        <div class="row justify-content-end py-2">
+          <div class="col d-flex flex-row-reverse">
+            {% if quest.is_overdue or quest.abandoned %}
+              <a href="{% url 'questgiver:repost' quest.id %}" class="btn btn-success ml-2">Repost</a>
+            {% else %}
+              <a href="{% url 'questgiver:approve' quest.id %}" class="btn btn-success ml-2">Approve</a>
+            {% endif %}
+            <a href="{% url 'questgiver:adjust' quest.id %}" class="btn btn-warning ml-2">Adjust</a>
+            <a href="{% url 'questgiver:retire' quest.id %}" class="btn btn-danger ml-2">Reject</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

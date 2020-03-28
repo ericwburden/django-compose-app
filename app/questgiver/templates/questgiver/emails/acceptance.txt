@@ -1,0 +1,25 @@
+Thanks for taking this opportunity to help someone in our community! You have volunteered
+to help with:
+
+{{topic}}
+{{description}}
+
+You're awesome! Just a reminder, it is anticipated that you will have finished up this
+opportunity within {{days}} days. No rush, it's just when we'll check back in to make 
+sure we don't need to re-post this opportunity. If you have any questions or need a little
+extra direction, please contact:
+
+- Name: {{contact_name}}
+- Email: {{contact_email}}
+- Phone: {{contact_phone}}
+
+When you're done, or you decide you aren't able to complete this opportunity (totally
+understand), then click the appropriate link below:
+
+Completed! -- {{server_name}}/{{id}}/complete/{{code}}
+
+
+Maybe next time...  -- {{server_name}}/{{id}}/abandon/{{code}}
+
+Thank you, thank you, thank you for taking on this task to help out your fellow
+Memphians!

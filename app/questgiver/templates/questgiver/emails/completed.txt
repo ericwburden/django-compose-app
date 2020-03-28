@@ -1,0 +1,10 @@
+The opportunity you posted ({{topic}}) has been reported complete! The contact 
+information for the person who completed your request is:
+
+- Email: {{accepted_by_email}}
+- Phone: {{accepted_by_phone}}
+
+Please reach out to this person if you haven't already to wrap up and finalize any 
+important details. In case you forgot, the full request was:
+
+{{description}}

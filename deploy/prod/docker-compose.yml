@@ -1,0 +1,120 @@
+version: '3.3'
+
+volumes:
+  postgres_data: {}
+  static_volume: {}
+
+services:
+  traefik:
+    image: "traefik:v2.1"
+    command:
+      # Redirect to HTTPS
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+
+      - --providers.docker # Monitor Docker for changes
+      - --api # Enable Traefik dashboard
+
+      # Setup for LetsEncrypt
+      - --certificatesresolvers.resolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.resolver.acme.email=$ACME_EMAIL
+      - --certificatesresolvers.resolver.acme.storage=/acme.json
+      - --certificatesresolvers.resolver.acme.tlschallenge=true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      # Dashboard
+      - "traefik.http.routers.traefik.rule=Host(`traefik.$SERVER_HOSTNAME`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls.certresolver=resolver"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.middlewares=authtraefik"
+      - "traefik.http.middlewares.authtraefik.basicauth.users=$TRAEFIK_USER:$TRAEFIK_PASSWORD" # user/password
+      
+      # global redirect to https
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+
+      # middleware redirect
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment: 
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB} 
+    labels:
+      - "traefik.http.services.postgres.loadbalancer.server.port=5432"
+
+  django:
+    build: .
+    command: gunicorn base.wsgi:application --bind 0.0.0.0:8000
+    volumes: 
+      - static_volume:/home/app/staticfiles
+    depends_on:
+      - postgres
+      - traefik
+    labels:
+      - "traefik.http.routers.django.rule=Host(`$SERVER_HOSTNAME`)"
+      - "traefik.http.services.django.loadbalancer.server.port=8000"
+      - "traefik.http.routers.django.entrypoints=websecure"
+      - "traefik.http.routers.django.tls=true"
+      - "traefik.http.routers.django.tls.certresolver=resolver"
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_DEBUG: ${DJANGO_DEBUG}
+      DJANGO_SUPERUSER: ${DJANGO_SUPERUSER}
+      DJANGO_SU_EMAIL: ${DJANGO_SU_EMAIL}
+      DJANGO_SU_PASSWORD: ${DJANGO_SU_PASSWORD}
+      DJANGO_TZ: ${DJANGO_TZ}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SERVER_HOSTNAME: ${SERVER_HOSTNAME}
+      SQL_ENGINE: ${SQL_ENGINE}
+      SQL_HOST: ${SQL_HOST}
+      SQL_PORT: ${SQL_PORT}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS}
+      EMAIL_SENDER: ${EMAIL_SENDER}
+      FLUSH_DB: ${FLUSH_DB}
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://${SERVER_HOSTNAME}"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  autoheal:
+    restart: on-failure
+    image: willfarrell/autoheal
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.http.services.postgres.loadbalancer.server.port=80"
+
+  nginx:
+    restart: unless-stopped
+    image: nginx:1.17.4-alpine
+    volumes:
+      - static_volume:/usr/share/nginx/html/staticfiles
+    depends_on: 
+      - django
+    labels:
+      - "traefik.http.routers.nginx.rule=Host(`$SERVER_HOSTNAME`)&&PathPrefix(`/staticfiles/`)"
+      - "traefik.http.services.nginx.loadbalancer.server.port=80"
+      - "traefik.http.routers.nginx.tls=true"
+      - "traefik.http.routers.nginx.tls.certresolver=resolver"
+      - "traefik.http.routers.nginx.entrypoints=websecure"

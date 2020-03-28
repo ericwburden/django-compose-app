@@ -1,0 +1,198 @@
+{% extends "./base.html" %}
+
+{% block title %}{{ quest.topic }}{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-8">
+        {% if message == 'already_accepted' %}
+
+          <div class="alert alert-warning" role="alert">
+            <h4>Already Accepted</h4>
+              <p class='lead'>
+                It looks like someone has already accepted this opportunity to pitch in.
+                Sorry about that, but please don't go! There are still lots of ways for you
+                to make a difference! We hope you'll take another look at the posting board
+                and take another shot at showing your real-life superhero stuff.
+              </p>
+              <a href="{% url 'questgiver:index' %}" class='alert-link'>View Opportunities</a>
+          </div>
+
+        {% elif message == 'already_approved' %}
+
+          <div class="alert alert-warning" role="alert">
+            <h4>Already Accepted</h4>
+              <p class='lead'>
+                This opportunity was already approved. Way to be pro-active!
+              </p>
+              <a href="{% url 'questgiver:pending' %}" class='alert-link'>Review More Opportunities</a>
+          </div>
+
+        {% elif message == 'already_completed' %}
+
+          <div class="alert alert-success" role="alert">
+            <h4>Already Completed</h4>
+              <p class='lead'>
+                Looks like this opportunity was already completed. Did you do it again?
+                I guess there's no limit to how awesome you can be, huh? Since you're 
+                already over-achieving, why not check out some more opportunities?
+              </p>
+              <a href="{% url 'questgiver:index' %}" class="alert-link">View More Opportunities</a>
+          </div>
+
+        {% elif message == 'already_retired' %}
+
+          <div class="alert alert-warning" role="alert">
+            <h4>Already Accepted</h4>
+              <p class='lead'>
+                Somebody rejected that one before you could get to it. No worries, it's 
+                just as rejected, regardless. Overkill, that's what you did.
+              </p>
+              <a href="{% url 'questgiver:pending' %}" class='alert-link'>Review More Opportunities</a>
+          </div>
+
+        {% elif message == 'accepted' %}
+
+          <div class="alert alert-success" role="alert">
+            <h4>Opportunity Accepted!</h4>
+              <p class="lead">
+                Thanks! You have accepted a call to action to make a real difference in Memphis.
+                Keep an eye on your inbox, you'll soon get an email with links to let us
+                know when you're done, along with the contact information for the person
+                or group who posted this request. And if no one else told you today, you're awesome!
+              </p>
+              <a href="{% url 'questgiver:index' %}" class="alert-link">View More Opportunities</a>
+          </div>
+
+        {% elif message == 'adjusted' %}
+
+          <div class="alert alert-warning" role="alert">
+            <h4>Opportunity Adjusted!</h4>
+              <p class="lead">
+                You're a perfectionist, aren't you? You've adjusted this request, but you
+                still need to approve it for it to be displayed on the home page. Don't 
+                forget, ok?
+              </p>
+              <a href="{% url 'questgiver:pending' %}" class="alert-link">Review More Opportunities</a>
+          </div>
+
+        {% elif message == 'approved' %}
+
+          <div class="alert alert-success" role="alert">
+            <h4>Opportunity Accepted!</h4>
+              <p class="lead">
+                Thanks for approving this opportunity. Want to review some more?
+              </p>
+              <a href="{% url 'questgiver:pending' %}" class="alert-link">Review More Opportunities</a>
+          </div>
+
+        {% elif message == 'retired' %}
+
+          <div class="alert alert-secondary" role="alert">
+            <h4>Opportunity Rejected!</h4>
+              <p class="lead">
+                Guess that one wasn't a good fit, eh? Want to review some more?
+              </p>
+              <a href="{% url 'questgiver:pending' %}" class="alert-link">Review More Opportunities</a>
+          </div>
+
+        {% elif message == 'reposted' %}
+
+          <div class="alert alert-success" role="alert">
+            <h4>Opportunity Reposted!</h4>
+              <p class="lead">
+                That's it! Get back out there and change the world! You've successfully
+                reposted that opportunity, giving someone another shot at greatness. 
+                Way to go!
+              </p>
+              <a href="{% url 'questgiver:pending' %}" class="alert-link">Review More Opportunities</a>
+          </div>
+
+        {% elif message == 'abandoned' %}
+
+          <div class="alert alert-secondary" role="alert">
+            <h4>Opportunity Rejected!</h4>
+              <p class="lead">
+                Hey, so it didn't work out. That's ok, seriously. Thanks for giving it a
+                go, and when you're ready, you brush yourself off and try again. We
+                still think you're pretty great.
+              </p>
+              <a href="{% url 'questgiver:index' %}" class="alert-link">View More Opportunities</a>
+          </div>
+
+        {% elif message == 'completed' %}
+
+          <div class="alert alert-success" role="alert">
+            <h4>Opportunity Completed!</h4>
+              <p class="lead">
+                Just in case no one told you, <b>YOU'RE AWESOME</b>! Seriously, no matter
+                how big or small, you have made a difference today, which is not something
+                everyone can say. Thanks a ton! Feel free to check out more opportunities
+                if you feel yourself getting hooked on the feeling of being a superhero.
+              </p>
+              <a href="{% url 'questgiver:index' %}" class="alert-link">View More Opportunities</a>
+          </div>
+
+        {% elif message == 'submitted' %}
+
+          <div class="alert alert-success" role="alert">
+            <h4>Opportunity submitted</h4>
+              <p class='lead'>
+                Thanks for proposing an opportunity for someone in our community to be a superstar.
+                Once a member of our team reviews this opportunity (just in case, you know), 
+                it will be posted to the front page to be picked up. If you're looking to be a 
+                superstar yourself, why not check out the link below?
+              </p>
+              <a href="{% url 'questgiver:index' %}" class='alert-link'>View Opportunities</a>
+          </div>
+
+        {% elif message == 'error' %}
+
+          <div class="alert alert-danger" role="alert">
+            <h4>Error</h4>
+              <p class='lead'>
+                Huh? How about that? Something went wrong. Sorry about that. The really bad
+                news is that whatever you were doing wasn't saved to the system, so...
+                do it again, please? Yeah, it's no fun. Maybe take a walk first, listen
+                to the birds sing, smell some flowers, then try again. Hopefully everything
+                will be in working order by then.
+              </p>
+              <a href="{% url 'questgiver:index' %}" class='alert-link'>View Opportunities</a>
+          </div>
+
+        {% elif message == 'unverified' %}
+
+          <div class="alert alert-danger" role="alert">
+            <h4>Unverified Email Link</h4>
+              <p class='lead'>
+                Weird. Looks like you might have tried to complete a request without clicking
+                the appropriate link. Try going back to your e-mail and clicking the button
+                directly. Sorry for the inconvenience. If it helps, try searching for an 
+                e-mail with the subject "Opportunity Accepted!". Or, you could always
+                browse the available opportunities...
+              </p>
+              <a href="{% url 'questgiver:index' %}" class='alert-link'>View Opportunities</a>
+          </div>
+
+        {% else %}
+
+          <div class="alert alert-secondary" role="alert">
+            <h4>No New Messages...</h4>
+              <p class="lead">
+                Hi! Not sure how you got here, but we don't have any new messages for you at
+                this time. Of course, if you're looking for a opportunity to bring a little
+                more light to our city, try clicking the link below. Thanks in advance!
+              </p>
+              <a href="{% url 'questgiver:index' %}" class="alert-link">View More Opportunities</a>
+          </div>
+          
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  
+    
+{% endblock %}

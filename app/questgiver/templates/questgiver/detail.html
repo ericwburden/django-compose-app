@@ -1,0 +1,78 @@
+{% extends "./base.html" %}
+
+{% block title %}{{ quest.topic }}{% endblock %}
+
+{% block content %}
+  <h2>{{ quest.topic }}</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Opportunity Details</h5>
+      <p class="card-text">
+        <dl>
+          <dt>Description</dt>
+          <dd>{{ quest.description }}</dd>
+          <dt>Contact</dt>
+          <dd>
+            <ul>
+              <li><b>Contact: </b>{{ quest.contact_name }}</li>
+              <li><b>E-Mail: </b>{{ quest.contact_email }}</li>
+              <li><b>Phone #: </b>{{ quest.contact_phone }}</li>
+            </ul>
+          </dd>
+          <dt>Other Information</dt>
+          <dd>
+            <ul>
+              <li><b>Priority: </b>{{ quest.priority }}/10</li>
+              <li><b>Days to Fulfill: </b>{{ quest.days_allowed }}</li>
+              <li><b>Posted: </b>
+                {% if quest.reposted %}
+                  {{ quest.reposted_at }}
+                {% else %}
+                  {{ quest.created_at }}
+                {% endif %}
+              </li>
+            </ul>
+          </dd>
+        </dl>
+      </p>
+      <div class="card-footer text-muted">
+        <form action="{% url 'questgiver:accept' quest.id %}" method="post">
+          {% csrf_token %}
+          <div class="container">
+            <div class="row py-2">
+              <div class="col-md-6 my-1">
+                <input 
+                  type="email" 
+                  name="email"
+                  id="accepted_by_email"
+                  class="form-control" 
+                  placeholder="Your Email Address" 
+                  aria-label="Your Email Address" 
+                  aria-describedby="basic-addon2"
+                  required>
+              </div>
+              <div class="col-md-6 my-1">
+                <input 
+                  type="tel" 
+                  name="phone"
+                  id="accepted_by_phone" 
+                  pattern="+?1?-?[0-9]{3}-?[0-9]{3}-?[0-9]{4}"
+                  class="form-control" 
+                  placeholder="Your Phone Number" 
+                  aria-label="Your Phone Number" 
+                  aria-describedby="basic-addon2"
+                  required>
+              </div>
+            </div>
+            <div class="row justify-content-end py-2">
+              <div class="col d-flex flex-row-reverse"">
+                <input type="submit" value="Accept Opportunity" class="btn btn-primary">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

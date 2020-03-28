@@ -1,0 +1,125 @@
+{% extends "./base.html" %}
+
+{% block title %}Post an Opportunity{% endblock %}
+
+{% block content %}
+
+  <form action="{% url 'questgiver:submit_request' %}" method="post">
+    {% csrf_token %}
+
+    <div class="container bg-light mt-5 py-2 px-3">
+      <div class="row py-2">
+        <div class="col">
+          <label for="contact_name">Contact Name</label>
+          <input 
+            type="text" 
+            name="contact_name"
+            id="contact_name"
+            class="form-control" 
+            placeholder="First Last" 
+            aria-label="Contact Name" 
+            aria-describedby="basic-addon2"
+            required>
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col">
+          <label for="contact_name">Contact Email Address</label>
+          <input 
+            type="email" 
+            name="contact_email"
+            id="contact_email"
+            class="form-control" 
+            placeholder="name@email.org" 
+            aria-label="Contact Email Address" 
+            aria-describedby="basic-addon2"
+            required>
+        </div>
+        <div class="col">
+          <label for="contact_phone">Contact Phone Number</label>
+          <input 
+            type="tel" 
+            name="contact_phone"
+            id="contact_phone" 
+            pattern="+?1?-?[0-9]{3}-?[0-9]{3}-?[0-9]{4}"
+            class="form-control" 
+            placeholder="###-###-####" 
+            aria-label="Contact Phone Number" 
+            aria-describedby="basic-addon2"
+            required>
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-12">
+              <label for="topic">Topic</label>
+              <input 
+                type="text" 
+                name="topic"
+                id="topic"
+                class="form-control" 
+                placeholder="Short Description" 
+                aria-label="Short Description" 
+                aria-describedby="basic-addon2"
+                required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label for="priority">Priority (1-10, higher is more)</label>
+              <input 
+                type="number" 
+                name="priority"
+                id="priority"
+                min="1"
+                max="10"
+                class="form-control" 
+                placeholder="Priority" 
+                aria-label="Priority" 
+                aria-describedby="basic-addon2"
+                required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label for="days_allowed">
+                How many days should it take to complete this task once accepted? (5-15)
+              </label>
+              <input 
+                type="number" 
+                name="days_allowed"
+                id="days_allowed"
+                min="5"
+                max="15"
+                class="form-control" 
+                placeholder="Days Allowed" 
+                aria-label="Days Allowd" 
+                aria-describedby="basic-addon2"
+                required>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label for="topic">Description</label>
+              <textarea  
+                type="textarea" 
+                name="description"
+                id="description"
+                class="form-control" 
+                placeholder="Long Description" 
+                aria-label="Long Description" 
+                aria-describedby="basic-addon2"
+                style="height:18vh;"
+                required></textarea>
+        </div>
+      </div>
+      <div class="row justify-content-end">
+        <div class="col d-flex justify-content-center">
+          <input type="submit" value="Submit" class="btn btn-primary">
+        </div>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}

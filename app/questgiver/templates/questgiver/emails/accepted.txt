@@ -1,0 +1,10 @@
+The opportunity you posted ({{topic}}) has been accepted! The contact 
+information for the person who accepted your request is:
+
+- Email: {{accepted_by_email}}
+- Phone: {{accepted_by_phone}}
+
+Please reach out to this person via phone or email to make sure any important additional
+details are shared. In case you forgot, the full request was:
+
+{{description}}
