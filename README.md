@@ -50,7 +50,7 @@ can learn more about using that application [HERE](app/questgiver/README.md)
 
 * **Eric Burden** - *Initial work* - [My Site](https://ericburden.work)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/ericwburden/django-compose-app/graphs/contributors) who participated in this project.
 
 ## License
 
