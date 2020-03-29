@@ -6,10 +6,12 @@ web-based request and response platform.
 
 ## Getting Started
 
-To begin development on this project, fill in the `.env` file located at 
-`deploy/dev/.env` using the recommendations included in the file comments. Then
-simply run `./deploy.sh dev` to spin up a collection of docker files. `./deploy.sh -h`
-displays the help file for the deployment script.
+To begin development on this project, fill in the `.env.template` file located at 
+`deploy/dev/.env.template` using the recommendations included in the file comments and 
+save as `deploy/dev/.env`. Then simply run `./deploy.sh dev` to spin up a collection of 
+docker files. `./deploy.sh -h` displays the help file for the deployment script, 
+`./deploy.sh -c` cleans up the build files (don't use this unless you don't like
+using the `docker-compose down` command...).
 
 ### Prerequisites
 
@@ -19,8 +21,8 @@ well as an installation of Python3.6+.
 ### Remote Deployment
 
 To deploy to a remote server, ensure that the server HOSTNAME and traefik.HOSTNAME both
-have A records that point to the server's IP and that you've filled in the `deploy/prod/.env`
-file.
+have A records that point to the server's IP and that you've filled in the 
+`deploy/prod/.env.template` file.
 
 Copy the application folder to the remote server using `scp -r $PWD user@hostname:dest_folder` 
 from inside the project directory (or `git clone` if that's your speed). Log into the 
