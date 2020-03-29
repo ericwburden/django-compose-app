@@ -135,6 +135,8 @@ services:
       - "traefik.http.routers.adminer.tls=true"
       - "traefik.http.routers.adminer.tls.certresolver=resolver"
       - "traefik.http.routers.adminer.entrypoints=websecure"
+      - "traefik.http.routers.adminer.middlewares=authadminer"
+      - "traefik.http.middlewares.authadminer.basicauth.users=$TRAEFIK_USER_PASS" # user:password
     environment:
       ADMINER_DESIGN: "arcs-material"
     healthcheck:
