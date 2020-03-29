@@ -32,7 +32,7 @@ services:
       - "traefik.http.routers.traefik.tls.certresolver=resolver"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.middlewares=authtraefik"
-      - "traefik.http.middlewares.authtraefik.basicauth.users=$TRAEFIK_USER:$TRAEFIK_PASSWORD" # user/password
+      - "traefik.http.middlewares.authtraefik.basicauth.users=$TRAEFIK_USER_PASS" # user:password
       
       # global redirect to https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"

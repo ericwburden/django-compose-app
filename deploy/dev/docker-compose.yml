@@ -23,7 +23,7 @@ services:
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.middlewares=authtraefik"
-      - "traefik.http.middlewares.authtraefik.basicauth.users=${TRAEFIK_USER}:${TRAEFIK_PASSWORD}" # user/password
+      - "traefik.http.middlewares.authtraefik.basicauth.users=${TRAEFIK_USER_PASS}" # user/password
 
   postgres:
     image: postgres
