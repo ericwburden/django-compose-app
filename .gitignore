@@ -16,6 +16,10 @@ app/entrypoint.sh
 # Backup files # 
 *.bak 
 
+# Migrations #
+app/*/migrations/*.py
+!app/*/migrations/000_admin.py
+
 # Static Files #
 app/staticfiles/*
 
