@@ -20,12 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", 'Fog+464sJ7kIgqqTswqGtYb533t7i1Hvrfa53tyR3qA')
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY", "Fog+464sJ7kIgqqTswqGtYb533t7i1Hvrfa53tyR3qA"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.getenv("DJANGO_DEBUG", default=0))
 
-ALLOWED_HOSTS = os.getenv("SERVER_HOSTNAME", 'localhost').split(" ")
+ALLOWED_HOSTS = os.getenv("SERVER_HOSTNAME", "localhost").split(" ")
 
 
 # Application definition
@@ -98,7 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 
 
 # Internationalization
@@ -112,7 +114,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = os.getenv("DJANGO_USE_TZ", True)
 
 
 # Static files (CSS, JavaScript, Images)
