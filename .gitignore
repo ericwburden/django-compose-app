@@ -6,6 +6,13 @@ __pycache__
 db.sqlite3
 media
 
+# Deployment files in parent directory #
+./.env
+./docker-compose.yml
+./Dockerfile
+./requirements.txt
+app/entrypoint.sh
+
 # Backup files # 
 *.bak 
 
