@@ -4,6 +4,12 @@ volumes:
   postgres_data: {}
   static_volume: {}
 
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
 services:
   traefik:
     image: "traefik:v2.1"
@@ -13,6 +19,9 @@ services:
 
       - --providers.docker # Monitor Docker for changes
       - --api # Enable Traefik dashboard
+    networks:
+      - web
+      - internal
     ports:
       - "80:80"
     volumes:
@@ -35,6 +44,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     labels:
       - "traefik.http.services.postgres.loadbalancer.server.port=5432"
+    networks:
+      - internal
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
       interval: 30s
@@ -54,6 +65,9 @@ services:
       - "traefik.http.routers.django.rule=Host(`${SERVER_HOSTNAME}`)"
       - "traefik.http.services.django.loadbalancer.server.port=8000"
       - "traefik.http.routers.django.entrypoints=web"
+    networks:
+      - web
+      - internal
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DJANGO_DEBUG: ${DJANGO_DEBUG}
@@ -61,6 +75,7 @@ services:
       DJANGO_SU_EMAIL: ${DJANGO_SU_EMAIL}
       DJANGO_SU_PASSWORD: ${DJANGO_SU_PASSWORD}
       DJANGO_TZ: ${DJANGO_TZ}
+      DJANGO_USE_TZ: ${DJANGO_USE_TZ}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -87,6 +102,8 @@ services:
     image: willfarrell/autoheal
     environment:
       - AUTOHEAL_CONTAINER_LABEL=all
+    networks:
+      - internal
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
@@ -95,6 +112,8 @@ services:
   nginx:
     restart: unless-stopped
     image: nginx:1.17.4-alpine
+    networks:
+      - web
     volumes:
       - static_volume:/usr/share/nginx/html/staticfiles
     depends_on: 
@@ -106,6 +125,9 @@ services:
   adminer:
     restart: unless-stopped
     image: adminer
+    networks:
+      - web
+      - internal
     depends_on:
       - postgres
     labels:
