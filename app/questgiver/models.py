@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
+from enum import Enum
 from uuid import uuid4
 
 
@@ -15,6 +16,19 @@ def uuid_str():
     return str(uuid4())
 
 
+class EventType(Enum):
+    ERROR = "Error"
+    SUBMIT = "Submitted"
+    ADJUST = "Adjusted"
+    REJECT = "Rejected"
+    APPROVE = "Approved"
+    ACCEPT = "Accepted"
+    ABANDON = "Abandoned"
+    COMPLETE = "Completed"
+    REPOST = "Reposted"
+    CLOSE = "Closed"
+
+
 class Quest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -23,89 +37,91 @@ class Quest(models.Model):
     contact_phone = models.CharField(
         validators=[RegexValidator(r"^\+?1?\d{9,15}$")], max_length=17
     )
+    accepted_by_email = models.EmailField(max_length=200)
+    accepted_by_phone = models.CharField(
+        validators=[RegexValidator(r"^\+?1?\d{9,15}$")], max_length=17
+    )
     topic = models.CharField(max_length=200)
     description = models.TextField()
     days_allowed = models.IntegerField(default=7)
     priority = models.IntegerField(
         default=1, validators=[MaxValueValidator(10), MinValueValidator(1)]
     )
-    accepted = models.BooleanField(default=False)
-    accepted_by_email = models.EmailField(max_length=200, blank=True, null=True)
-    accepted_by_phone = models.CharField(
-        validators=[RegexValidator(r"^\+?1?\d{9,15}$")],
-        max_length=17,
-        blank=True,
-        null=True,
-    )
-    accepted_at = models.DateTimeField(blank=True, null=True)
-    completed = models.BooleanField(default=False)
-    completed_at = models.DateTimeField(blank=True, null=True)
-    retired = models.BooleanField(default=False)
-    retired_at = models.DateTimeField(blank=True, null=True)
-    abandoned = models.BooleanField(default=False)
-    abandoned_at = models.DateTimeField(blank=True, null=True)
-    reposted = models.BooleanField(default=False)
-    reposted_at = models.DateTimeField(blank=True, null=True)
-    approved = models.BooleanField(default=False)
-    approved_at = models.DateTimeField(blank=True, null=True)
-    approved_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="quest_approved_by",
-    )
-    status = models.CharField(max_length=15, blank=True, null=True)
     email_code = models.CharField(default=uuid_str, max_length=36)
 
-    def __str__(self):
-        return f"{self.created_at} - {self.topic} - {self.status}"
+    def save(self, event=None, *args, **kwargs):
+        super(Quest, self).save(*args, **kwargs)
+        if not event:
+            event = Event(quest=self, event_type=EventType.SUBMIT.name)
+        event.save()
 
-    def save(self, *args, **kwargs):
-        if self.accepted and not self.accepted_at:
-            self.accepted_at = timezone.now()
-        if self.completed and not self.completed_at:
-            self.completed_at = timezone.now()
-        if self.retired and not self.retired_at:
-            self.retired_at = timezone.now()
-        if self.abandoned and not self.abandoned_at:
-            self.abandoned_at = timezone.now()
-        if self.approved and not self.approved_at:
-            self.approved_at = timezone.now()
-        if self.reposted and not self.reposted_at:
-            self.reposted_at = timezone.now()
-        self.status = "Submitted"
-        if self.approved:
-            self.status = "Approved"
-        if self.reposted:
-            self.status = "Reposted"
-        if self.accepted:
-            self.status = "Accepted"
-        if self.retired:
-            self.status = "Retired"
-        if self.completed:
-            self.status = "Completed"
-        super().save(*args, **kwargs)
+    def __str__(self):
+        return f"{self.topic} - {self.contact_name} ({self.id})"
+
+    def last_event(self):
+        return Event.objects.filter(quest=self.id).order_by("-created_at").first()
+
+    def status(self):
+        return self.last_event().event_type if self.last_event() else 'ERROR'
+
+    def status_label(self):
+        return EventType[self.status()].value
+
+    def last_update(self):
+        return self.last_event().created_at if self.last_event() else None
+
+    def last_event_of_type(self, event_type: EventType):
+        return (
+            Event.objects.filter(quest=self.id, event_type=event_type.name)
+            .order_by("-created_at")
+            .first()
+        )
 
     def is_overdue(self):
         now = timezone.now()
-        if self.accepted_at:
-            return self.accepted_at + datetime.timedelta(days=self.days_allowed) < now
+        last_accepted = self.last_event_of_type(EventType.ACCEPT)
+        if last_accepted:
+            return (
+                last_accepted.created_at + datetime.timedelta(days=self.days_allowed)
+                < now
+            )
         return False
 
     def days_overdue(self):
         now = timezone.now()
         if self.is_overdue():
-            td = now - (self.accepted_at + datetime.timedelta(days=self.days_allowed))
+            last_accepted = self.last_event_of_type(EventType.ACCEPT)
+            td = now - (
+                last_accepted.created_at + datetime.timedelta(days=self.days_allowed)
+            )
             return divmod(int(td.total_seconds()), 24 * 60 * 60)[0]
         return 0
 
     def sort_order(self):
         priority_multiplier = 1 / self.priority
 
-        if self.reposted:
-            days_since_update = timezone.now() - self.reposted_at
+        last_reposted = self.last_event_of_type(EventType.REPOST)
+        if last_reposted:
+            days_since_update = timezone.now() - last_reposted.created_at
             return days_since_update * priority_multiplier * REPOST_PRIORITY_MULTIPLIER
 
-        days_since_post = timezone.now() - self.created_at
-        return days_since_post * priority_multiplier
+        last_accepted = self.last_event_of_type(EventType.ACCEPT)
+        if last_accepted:
+            days_since_post = timezone.now() - last_accepted.created_at
+            return days_since_post * priority_multiplier
+        return 0
+
+
+class Event(models.Model):
+    quest = models.ForeignKey(Quest, on_delete=models.CASCADE)
+    event_type = models.CharField(
+        max_length=8, choices=[(tag.name, tag.value) for tag in EventType]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="event_created_by",
+    )

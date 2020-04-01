@@ -1,9 +1,10 @@
 import logging
 
 from .mail import acceptance_email, completed_email, accepted_email
-from .models import Quest
+from .models import Quest, EventType, Event
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q, Max, F
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
@@ -18,9 +19,17 @@ class IndexView(generic.ListView):
     context_object_name = "quest_list"
 
     def get_queryset(self):
-        open_quests = Quest.objects.filter(
-            approved=True, accepted=False, retired=False
-        ).all()
+        """
+        All quests with a most recent status of 'Approved' or 'Reposted'
+        """
+        open_quests = (
+            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
+            .filter(
+                Q(event__created_at=F('latest_event_date')),
+                Q(event__event_type=EventType.APPROVE.name)
+                | Q(event__event_type=EventType.REPOST.name)
+            )
+        )
         return sorted(open_quests, key=lambda x: x.sort_order())
 
 
@@ -30,11 +39,16 @@ class DetailView(generic.DetailView):
 
     def get_queryset(self):
         """
-        Excludes any quests that aren't approved, or quests that are currently
-        accepted or retired
+        All quests with a most recent status of 'Approved' or 'Reposted'
         """
-        open_quests = Quest.objects.filter(approved=True, accepted=False, retired=False)
-        return open_quests
+        return (
+            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
+            .filter(
+                Q(event__created_at=F('latest_event_date')),
+                Q(event__event_type=EventType.APPROVE.name)
+                | Q(event__event_type=EventType.REPOST.name)
+            )
+        )
 
 
 def request_new(request):
@@ -49,7 +63,10 @@ class PendingView(LoginRequiredMixin, generic.ListView):
     context_object_name = "quest_list"
 
     def get_queryset(self):
-        return Quest.objects.filter(approved=False, retired=False).order_by(
+        """
+        All quests that have not been 'Approved'
+        """
+        return Quest.objects.exclude(event__event_type=EventType.APPROVE.name).order_by(
             "-created_at"
         )
 
@@ -58,32 +75,15 @@ class ReviewView(LoginRequiredMixin, generic.DetailView):
     model = Quest
     template_name = "questgiver/review.html"
 
-    def get_queryset(self):
-        """
-        Excludes any quests that are approved or retired
-        """
-        return Quest.objects.filter(approved=False, retired=False)
-
 
 class ReviewOverdueView(LoginRequiredMixin, generic.DetailView):
     model = Quest
     template_name = "questgiver/review.html"
 
-    def get_queryset(self):
-        return Quest.objects.filter(reposted=False, retired=False)
-        return [q for q in quests if q.is_overdue()]
-
 
 class AdjustView(LoginRequiredMixin, generic.DetailView):
     model = Quest
     template_name = "questgiver/adjust.html"
-
-    def get_queryset(self):
-        """
-        Excludes any quests that aren't approved, or quests that are currently
-        accepted or retired
-        """
-        return Quest.objects.filter(approved=False, retired=False)
 
 
 class OverdueView(LoginRequiredMixin, generic.ListView):
@@ -91,8 +91,17 @@ class OverdueView(LoginRequiredMixin, generic.ListView):
     context_object_name = "quest_list"
 
     def get_queryset(self):
-        quests = Quest.objects.filter(reposted=False, retired=False).all()
-        return [q for q in quests if q.is_overdue()]
+        """
+        All quests with a most recent status of 'Accepted' that is marked overdue
+        """
+        accepted_requests = (
+            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
+            .filter(
+                event__created_at=F('latest_event_date'),
+                event__event_type=EventType.ACCEPT.name
+            )
+        )
+        return [q for q in accepted_requests if q.is_overdue()]
 
 
 class AbandonedView(LoginRequiredMixin, generic.ListView):
@@ -100,7 +109,16 @@ class AbandonedView(LoginRequiredMixin, generic.ListView):
     context_object_name = "quest_list"
 
     def get_queryset(self):
-        return Quest.objects.filter(abandoned=True, retired=False).all()
+        """
+        All quests with a most recent status of 'Abandoned'
+        """
+        return (
+            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
+            .filter(
+                event__created_at=F('latest_event_date'),
+                event__event_type=EventType.ABANDON.name
+            )
+        )
 
 
 class CompletedView(LoginRequiredMixin, generic.ListView):
@@ -108,7 +126,16 @@ class CompletedView(LoginRequiredMixin, generic.ListView):
     context_object_name = "quest_list"
 
     def get_queryset(self):
-        return Quest.objects.filter(completed=True, retired=False).all()
+        """
+        All quests with a most recent status of 'Completed'
+        """
+        return (
+            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
+            .filter(
+                event__created_at=F('latest_event_date'),
+                event__event_type=EventType.COMPLETE.name
+            )
+        )
 
 
 # Unauthenticated Redirects ------------------------------------------------------------
@@ -116,16 +143,16 @@ class CompletedView(LoginRequiredMixin, generic.ListView):
 
 def accept_opportunity(request, quest_id):
     quest = get_object_or_404(Quest, pk=quest_id)
-    if quest.accepted:
+    if quest.status() == EventType.ACCEPT.name:
         message = "already_accepted"
         return HttpResponseRedirect(reverse("questgiver:message", args=(message,)))
-    quest.accepted = True
     quest.accepted_by_email = request.POST["email"]
     quest.accepted_by_phone = request.POST["phone"].replace("-", "")
+    acceptance_event = Event(quest=quest, event_type=EventType.ACCEPT.name)
     message = "accepted"
     if acceptance_email(quest):
         try:
-            quest.save()
+            quest.save(event=acceptance_event)
         except Exception as exc:
             logging.error(exc)
             message = "error"
@@ -157,14 +184,14 @@ def submit_request(request):
 def email_complete_response(request, pk, code):
     quest = get_object_or_404(Quest, pk=pk)
     message = "unverified"
-    if quest.completed:
+    if quest.status() == EventType.COMPLETE.name:
         message = "already_completed"
         return HttpResponseRedirect(reverse("questgiver:message", args=(message,)))
     if quest.email_code == code:
-        quest.completed = True
+        completed_event = Event(quest=quest, event_type=EventType.COMPLETE.name)
         message = "completed"
         try:
-            quest.save()
+            quest.save(event=completed_event)
         except Exception as exc:
             logging.error(exc)
             message = "error"
@@ -175,14 +202,14 @@ def email_complete_response(request, pk, code):
 def email_abandon_response(request, pk, code):
     quest = get_object_or_404(Quest, pk=pk)
     message = "unverified"
-    if quest.completed:
+    if quest.status() == EventType.COMPLETE.name:
         message = "already_completed"
         return HttpResponseRedirect(reverse("questgiver:message", args=(message,)))
     if quest.email_code == code:
-        quest.abandoned = True
+        abandoned_event = Event(quest=quest, event_type=EventType.ABANDON.name)
         message = "abandoned"
         try:
-            quest.save()
+            quest.save(event=abandoned_event)
         except Exception as exc:
             logging.error(exc)
             message = "error"
@@ -194,13 +221,13 @@ def email_abandon_response(request, pk, code):
 
 def approve_request(request, pk):
     quest = get_object_or_404(Quest, pk=pk)
-    if quest.accepted:
+    if quest.status() == EventType.APPROVE.name:
         message = "already_approved"
         return HttpResponseRedirect(reverse("questgiver:message", args=(message,)))
-    quest.approved = True
+    approved_event = Event(quest=quest, event_type=EventType.APPROVE.name)
     message = "approved"
     try:
-        quest.save()
+        quest.save(event=approved_event)
     except Exception as exc:
         logging.error(exc)
         message = "error"
@@ -209,13 +236,13 @@ def approve_request(request, pk):
 
 def retire_request(request, pk):
     quest = get_object_or_404(Quest, pk=pk)
-    if quest.retired:
+    if quest.status() == EventType.CLOSE.name:
         message = "already_retired"
         return HttpResponseRedirect(reverse("questgiver:message", args=(message,)))
-    quest.retired = True
+    closed_event = Event(quest=quest, event_type=EventType.CLOSE.name)
     message = "retired"
     try:
-        quest.save()
+        quest.save(event=closed_event)
     except Exception as exc:
         logging.error(exc)
         message = "error"
@@ -231,9 +258,10 @@ def submit_adjustment(request, pk):
     quest.description = request.POST["description"]
     quest.days_allowed = request.POST["days_allowed"]
     quest.priority = request.POST["priority"]
+    adjustment_event = Event(quest=quest, event_type=EventType.ADJUST.name)
     message = "adjusted"
     try:
-        quest.save()
+        quest.save(event=adjustment_event)
     except Exception as exc:
         logging.error(exc)
         message = "error"
@@ -242,14 +270,13 @@ def submit_adjustment(request, pk):
 
 def repost_request(request, pk):
     quest = get_object_or_404(Quest, pk=pk)
-    if quest.reposted:
+    if quest.status() == EventType.REPOST.name:
         message = "already_reposted"
         return HttpResponseRedirect(reverse("questgiver:message", args=(message,)))
     reposted_quest = Quest(
         id=quest.id,
         created_at=quest.created_at,
         updated_at=quest.updated_at,
-        reposted=True,
         contact_name=quest.contact_name,
         contact_email=quest.contact_email,
         contact_phone=quest.contact_phone,
@@ -257,12 +284,11 @@ def repost_request(request, pk):
         description=quest.description,
         days_allowed=quest.days_allowed,
         priority=quest.priority,
-        approved=quest.approved,
-        approved_at=quest.approved_at,
     )
+    reposted_event = Event(quest=quest, event_type=EventType.REPOST.name)
     message = "reposted"
     try:
-        reposted_quest.save()
+        reposted_quest.save(event=reposted_event)
     except Exception as exc:
         logging.error(exc)
         message = "error"

@@ -42,6 +42,10 @@ urlpatterns = [
     path("<int:pk>/repost/submit/", views.repost_request, name="repost"),
     # Utilities ------------------------------------------------------------------------
     path("message/<str:message>", views.message, name="message"),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page="questgiver:index"), name='logout'),
+    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(next_page="questgiver:index"),
+        name="logout",
+    ),
 ]
