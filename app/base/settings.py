@@ -33,6 +33,7 @@ ALLOWED_HOSTS = os.getenv("SERVER_HOSTNAME", "localhost").split(" ")
 # Application definition
 
 INSTALLED_APPS = [
+    "dtd_request.apps.DtdRequestConfig",
     "questgiver.apps.QuestgiverConfig",
     "django.contrib.admin",
     "django.contrib.auth",
