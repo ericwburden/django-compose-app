@@ -116,4 +116,8 @@ if [ "$BUILD" ]; then
   COMPOSE_COMMAND="$COMPOSE_COMMAND --build"
 fi
 
+# Create the 'web' network if it doesn't already exist
+docker network inspect web >/dev/null 2>&1 || \
+    docker network create --driver bridge web
+
 eval "$COMPOSE_COMMAND"
