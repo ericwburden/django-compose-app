@@ -1,0 +1,92 @@
+{% extends "./base.html" %}
+
+{% load static %}
+{% load custom_template_tags %}
+
+{% block title %}Request Status{% endblock %}
+
+{% block content %}
+  <div class="container py-2 px-3">
+    <div class="row py-1 my-2 bg-primary text-light rounded rounded-lg">
+      <div class="col-sm-3 text-center"><b>Contact Name</b></div>
+      <div class="col-sm-3 text-center"><b>Domain</b></div>
+      <div class="col-sm-3 text-center"><b>Last Updated</b></div>
+      <div class="col-sm-3 text-center"><b>Current Status</b></div>
+    </div>
+    <div class="accordion" id="accordion">
+      {% for request in requests %}
+        
+      {% if request.status == "PENDING" %}
+          {% setvar "bg-dark" as bg_color %}
+      {% elif request.status == "RECEIVED" %}
+          {% setvar "bg-secondary" as bg_color %}
+      {% elif request.status == "REVIEWED" %}
+          {% setvar "bg-info" as bg_color %}
+      {% elif request.status == "CONTACTED" %}
+          {% setvar "bg-warning" as bg_color %}
+      {% elif request.status == "REFERRED" %}
+          {% setvar "bg-success" as bg_color %}
+      {% endif %}
+
+      <div class="row py-1 my-2 {{ bg_color }} text-light rounded rounded-lg position-relative">
+        <div class="col-sm-3 text-center position-relative">
+          <a href="#" class="alert-link stretched-link text-light" data-toggle="collapse" data-target="#collapse_{{request.id}}">
+            {{ request.contact }}
+          </a>
+        </div>
+        <div class="col-sm-3 text-center">{{ request.type_of_need }}</div>
+        <div class="col-sm-3 text-center">{{ request.latest_response|date:'F d, Y' }}</div>
+        <div class="col-sm-3 text-center">
+          <div class="dropdown text-center">
+            <a 
+              href="#"
+              class="alert-link stretched-link text-light"
+              id="action_{{ request.id }}" 
+              data-toggle="dropdown" 
+              aria-haspopup="true" 
+              aria-expanded="false">
+              {{ request.status }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+              {% if request.status != "PENDING" %}
+                <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'PENDING' %}">Mark Pending</a>
+              {% endif %}
+              {% if request.status != "RECEIVED" %}
+                <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'RECEIVED' %}">Receive</a>
+              {% endif %}
+              {% if request.status != "REVIEWED" %}
+                <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'REVIEWED' %}">Under Review</a>
+              {% endif %}
+              {% if request.status != "CONTACTED" %}
+                <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'CONTACTED' %}">Contact Made</a>
+              {% endif %}
+              {% if request.status != "REFERRED" %}
+                <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'REFERRED' %}">Referral Made</a>
+              {% endif %}
+              {% if request.status != "CLOSED" %}
+                <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'CLOSED' %}">Close Request</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="collapse_{{request.id}}" class="collapse" data-parent="#accordion">
+        <div class="row bg-light rounded-bottom rounded-lg">
+          <div class="col">
+            <ul>
+              <li><b>Email: </b>{{ request.email }}</li>
+              <li><b>Primary Phone: </b>{{ request.primary_phone }}</li>
+              <li><b>Secondary Phone: </b>{{ request.secondary_phone }}</li>
+            </ul>
+          </div>
+          <div class="col">
+            <p><b>Notes:</b></p>
+            <p>{{ request.add_info }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}

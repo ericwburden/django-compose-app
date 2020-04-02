@@ -1,0 +1,112 @@
+{% extends "./base.html" %}
+
+{% block title %}Request a Referral{% endblock %}
+
+{% block content %}
+
+  <form action="{% url 'dtd_request:request' %}" method="post">
+    {% csrf_token %}
+    <div class="container bg-light mt-5 py-2 px-3">
+      <div class="row">
+        <div class="col">{{ form.non_field_errors }}</div>
+      </div>
+      <div class="row" hidden>
+        <div class="col">{{ form.confirmation_code }}</div>
+      </div>
+      <div class="row py-2">
+        <div class="col-md-6">
+          {{ form.contact.errors }}
+          {{ form.contact.label_tag }}
+          <input 
+            type="text" 
+            name="{{ form.contact.name }}"
+            id="{{ form.contact.id_for_label  }}"
+            class="form-control" 
+            placeholder="{{ form.contact.help_text|safe }}" 
+            aria-label="{{ form.contact.label }}" 
+            aria-describedby="basic-addon2"
+            required>
+        </div>
+        <div class="col-md-6">
+          {{ form.email.errors }}
+          {{ form.email.label_tag }}
+          <input 
+            type="text" 
+            name="{{ form.email.name }}"
+            id="{{ form.email.id_for_label  }}"
+            class="form-control" 
+            placeholder="{{ form.email.help_text|safe }}" 
+            aria-label="{{ form.email.label }}" 
+            aria-describedby="basic-addon2"
+            required>
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-md-6">
+          {{ form.primary_phone.errors }}
+          {{ form.primary_phone.label_tag }}
+          <input 
+            type="text" 
+            name="{{ form.primary_phone.name }}"
+            id="{{ form.primary_phone.id_for_label  }}"
+            class="form-control" 
+            placeholder="{{ form.primary_phone.help_text|safe }}" 
+            aria-label="{{ form.primary_phone.label }}" 
+            aria-describedby="basic-addon2"
+            required>
+        </div>
+        <div class="col-md-6">
+          {{ form.secondary_phone.errors }}
+          {{ form.secondary_phone.label_tag }}
+          <input 
+            type="text" 
+            name="{{ form.secondary_phone.name }}"
+            id="{{ form.secondary_phone.id_for_label  }}"
+            class="form-control" 
+            placeholder="{{ form.secondary_phone.help_text|safe }}" 
+            aria-label="{{ form.secondary_phone.label }}" 
+            aria-describedby="basic-addon2"s>
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-md-12">
+          {{ form.type_of_need.errors }}
+          {{ form.type_of_need.label_tag }}
+          <select 
+            name="{{ form.type_of_need.name }}" 
+            id="{{ form.type_of_need.id_for_label }}"
+            class="form-control">
+              {% for val,label in form.fields.type_of_need.choices %}
+              <option value="{{ val }}" 
+                {% if form.field.type_of_need.value == val %} selected {% endif %}>
+                {{ label }}
+              </option>
+              {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-md-12">
+          {{ form.add_info.errors }}
+          {{ form.add_info.label_tag }}
+          <textarea  
+              type="textarea" 
+              name="{{ form.add_info.name }}"
+              id="{{ form.add_info.id_for_label }}"
+              class="form-control" 
+              placeholder="{{ form.add_info.help_text|safe }}" 
+              aria-label="{{ form.add_info.label }}" 
+              aria-describedby="basic-addon2"
+              style="height:18vh;"
+              required></textarea>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 d-flex justify-content-center">
+          <input type="submit" value="Request a Referral" class="btn btn-primary">
+        </div>
+      </div>
+    </div>
+  </form>  
+
+{% endblock %}

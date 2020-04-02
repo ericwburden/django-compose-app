@@ -1,0 +1,50 @@
+{% extends "./base.html" %}
+
+{% block title %}Request a Referral{% endblock %}
+
+{% block content %}
+
+  <form action="{% url 'dtd_request:my_request_search' %}" method="post">
+    {% csrf_token %}
+    <div class="container bg-light mt-5 py-2 px-3">
+      <div class="row py-2">
+        <div class="col-sm-12">
+          <div class="form-group">
+            {{ form.primary_phone.errors }}
+            {{ form.primary_phone.label_tag }}
+            <input 
+              type="text" 
+              name="{{ form.primary_phone.name }}"
+              id="{{ form.primary_phone.id_for_label  }}"
+              class="form-control" 
+              placeholder="{{ form.primary_phone.help_text|safe }}" 
+              aria-label="{{ form.primary_phone.label }}" 
+              aria-describedby="basic-addon2"
+              required>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="form-group">
+            {{ form.confirmation_code.errors }}
+            {{ form.confirmation_code.label_tag }}
+            <input 
+              type="text" 
+              name="{{ form.confirmation_code.name }}"
+              id="{{ form.confirmation_code.id_for_label  }}"
+              class="form-control" 
+              placeholder="{{ form.confirmation_code.help_text|safe }}" 
+              aria-label="{{ form.confirmation_code.label }}" 
+              aria-describedby="basic-addon2"
+              required>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 d-flex justify-content-center">
+          <input type="submit" value="Check Request Status" class="btn btn-primary">
+        </div>
+      </div>
+    </div>
+  </form>  
+
+{% endblock %}
