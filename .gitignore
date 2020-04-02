@@ -18,7 +18,9 @@ app/entrypoint.sh
 
 # Migrations #
 app/*/migrations/*.py
-!app/*/migrations/000_admin.py
+!app/questgiver/migrations/000_admin.py
+!app/dtd_request/migrations/0001_initial.py
+!app/dtd_request/migrations/0002_domain_data.py
 
 # Static Files #
 app/staticfiles/*
