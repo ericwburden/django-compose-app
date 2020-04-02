@@ -4,6 +4,12 @@ volumes:
   postgres_data: {}
   static_volume: {}
 
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
 services:
   traefik:
     image: "traefik:v2.1"
@@ -20,6 +26,9 @@ services:
       - --certificatesresolvers.resolver.acme.email=$ACME_EMAIL
       - --certificatesresolvers.resolver.acme.storage=/acme.json
       - --certificatesresolvers.resolver.acme.tlschallenge=true
+    networks:
+      - web
+      - internal
     ports:
       - "80:80"
       - "443:443"
@@ -52,6 +61,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB} 
     labels:
       - "traefik.http.services.postgres.loadbalancer.server.port=5432"
+    networks:
+      - internal
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
       interval: 30s
@@ -72,6 +83,9 @@ services:
       - "traefik.http.routers.django.entrypoints=websecure"
       - "traefik.http.routers.django.tls=true"
       - "traefik.http.routers.django.tls.certresolver=resolver"
+    networks:
+      - web
+      - internal
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DJANGO_DEBUG: ${DJANGO_DEBUG}
@@ -109,6 +123,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.http.services.postgres.loadbalancer.server.port=80"
+    networks:
+      - internal
 
   nginx:
     restart: unless-stopped
@@ -123,6 +139,8 @@ services:
       - "traefik.http.routers.nginx.tls=true"
       - "traefik.http.routers.nginx.tls.certresolver=resolver"
       - "traefik.http.routers.nginx.entrypoints=websecure"
+    networks:
+      - web
 
   adminer:
     restart: unless-stopped
@@ -135,6 +153,9 @@ services:
       - "traefik.http.routers.adminer.tls=true"
       - "traefik.http.routers.adminer.tls.certresolver=resolver"
       - "traefik.http.routers.adminer.entrypoints=websecure"
+    networks:
+      - web
+      - internal
     environment:
       ADMINER_DESIGN: "arcs-material"
     healthcheck:
