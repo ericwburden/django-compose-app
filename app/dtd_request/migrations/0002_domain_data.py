@@ -35,7 +35,7 @@ DEFAULT_DOMAIN_DATA = json.loads(
         },
         {
             "value": 8,
-            "label": "Life Skills"
+            "label": "Healthcare"
         },
         {
             "value": 9,

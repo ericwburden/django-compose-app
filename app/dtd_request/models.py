@@ -14,6 +14,10 @@ review_choices = (
 )
 
 
+def short_code():
+    return str(uuid4())[:8]
+
+
 class Domain(models.Model):
     value = models.IntegerField(unique=True)
     label = models.CharField(max_length=100)
@@ -66,7 +70,7 @@ class Request(models.Model):
         verbose_name="Please provide any additional information here",
         help_text="Share anything else you'd like for us to know",
     )
-    confirmation_code = models.CharField(max_length=36, default=uuid4)
+    confirmation_code = models.CharField(max_length=8, default=short_code)
 
     def __str__(self):
         return f'{self.contact}:{self.type_of_need} ({self.id})'
