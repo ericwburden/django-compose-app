@@ -71,6 +71,7 @@ class Request(models.Model):
         help_text="Share anything else you'd like for us to know",
     )
     confirmation_code = models.CharField(max_length=8, default=short_code)
+    referral_id = models.IntegerField(blank=True, null=True, verbose_name="Referral ID")
 
     def __str__(self):
         return f"{self.contact}:{self.created_at.date()} ({self.id})"

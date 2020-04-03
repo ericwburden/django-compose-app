@@ -1,18 +1,19 @@
 import logging
 
-from .forms import RequestForm, MyRequestSearchForm, RequestDomainFormset
+from .forms import RequestForm, MyRequestSearchForm, RequestDomainFormset, LinkReferralForm
 from .models import Request, Response
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import F, Q, Max
+from django.forms import TextInput
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import FormView, CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy, reverse
 
@@ -102,3 +103,12 @@ class UpdateRequest(LoginRequiredMixin, RedirectView):
         response.save()
         # return super().get_redirect_url(*args, **kwargs)
         return reverse("dtd_request:manage")
+
+
+class LinkReferral(LoginRequiredMixin, UpdateView):
+    model = Request
+    form_class = LinkReferralForm
+    template_name = "dtd_request/link_referral.html"
+
+    def get_success_url(self):
+        return reverse("dtd_request:update", args=[self.object.id, "REFERRED"])

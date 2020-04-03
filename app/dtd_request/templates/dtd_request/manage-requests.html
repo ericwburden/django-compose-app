@@ -61,7 +61,7 @@
                 <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'CONTACTED' %}">Contact Made</a>
               {% endif %}
               {% if request.status != "REFERRED" %}
-                <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'REFERRED' %}">Referral Made</a>
+                <a class="dropdown-item" href="{% url 'dtd_request:link_referral' request.id %}">Referral Made</a>
               {% endif %}
               {% if request.status != "CLOSED" %}
                 <a class="dropdown-item" href="{% url 'dtd_request:update' request.id 'CLOSED' %}">Close Request</a>

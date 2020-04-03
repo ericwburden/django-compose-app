@@ -1,0 +1,35 @@
+{% extends "./base.html" %}
+
+{% load static %}
+
+{% block title %}Referral Requested!{% endblock %}
+
+{% block content %}
+
+<div class="container p-2">
+  <form method="post">
+    {% csrf_token %}
+    <div class="row d-flex justify-content-center">
+      <div class="col-4">
+          {% for field in form %}
+            <div class="form-group my-2">
+              {{field.errors}}
+              {{ field.label_tag }}{{ field }}
+              {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+              {% endif %}
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+      <div class="col-4 text-center">
+        <input type="submit" value="Update" class="btn btn-primary">
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+{% endblock %}

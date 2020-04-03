@@ -35,3 +35,10 @@ class MyRequestSearchForm(forms.ModelForm):
     class Meta:
         model = Request
         fields = ["primary_phone", "confirmation_code"]
+
+
+class LinkReferralForm(forms.ModelForm):
+    class Meta:
+        model = Request
+        fields = ["referral_id"]
+        widgets = {"referral_id": forms.TextInput(attrs={"class": "form-control", "required": True})}

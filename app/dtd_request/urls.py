@@ -13,6 +13,7 @@ urlpatterns = [
     path("status/<str:phone>/<str:code>", views.MyRequest.as_view(), name="my_request"),
     # Authenticated Pages --------------------------------------------------------------
     path("manage/", views.ManageRequests.as_view(), name="manage"),
+    path("referral-id/<int:pk>", views.LinkReferral.as_view(), name="link_referral"),
     # Authenticated Redirects ----------------------------------------------------------
     path("update/<int:pk>/<str:status>", views.UpdateRequest.as_view(), name="update"),
     # Utilities ------------------------------------------------------------------------
