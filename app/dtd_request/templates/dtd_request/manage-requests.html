@@ -72,14 +72,21 @@
       </div>
       <div id="collapse_{{request.id}}" class="collapse" data-parent="#accordion">
         <div class="row bg-light rounded-bottom rounded-lg">
-          <div class="col">
-            <ul>
-              <li><b>Email: </b>{{ request.email }}</li>
-              <li><b>Primary Phone: </b>{{ request.primary_phone }}</li>
-              <li><b>Secondary Phone: </b>{{ request.secondary_phone }}</li>
-            </ul>
+          <div class="col-sm-6">
+            <dl>
+              <dt>Contact Details</dt>
+              <dd class="ml-2">- <b>Email: </b>{{ request.email }}</dd>
+              <dd class="ml-2">- <b>Primary Phone: </b>{{ request.primary_phone }}</dd>
+              <dd class="ml-2">- <b>Secondary Phone: </b>{{ request.secondary_phone }}</dd>
+              {% if request.needs %}
+                <dt>Need Domains</dt>
+                {% for need in request.needs %}
+                  <dd class="ml-2">- {{ need }}</dd>
+                {% endfor %}
+              {% endif %}
+            </dl>
           </div>
-          <div class="col">
+          <div class="col-sm-6">
             <p><b>Notes:</b></p>
             <p>{{ request.add_info }}</p>
           </div>

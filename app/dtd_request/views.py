@@ -1,27 +1,43 @@
 import logging
 
-from .forms import RequestForm, MyRequestSearchForm
+from .forms import RequestForm, MyRequestSearchForm, RequestDomainFormset
 from .models import Request, Response
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.db.models import F, Q, Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy, reverse
 
 
-class RequestView(FormView):
+class RequestView(CreateView):
+    model = Request
     template_name = "dtd_request/request.html"
     form_class = RequestForm
 
+    def get_context_data(self, **kwargs):
+        data = super(RequestView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["domains"] = RequestDomainFormset(self.request.POST)
+        else:
+            data["domains"] = RequestDomainFormset()
+        return data
+
     def form_valid(self, form):
-        form.save()
+        context = self.get_context_data()
+        domains = context["domains"]
+        with transaction.atomic():
+            self.object = form.save()
+            if domains.is_valid():
+                domains.instance = self.object
+                domains.save()
         code = form.cleaned_data["confirmation_code"]
         return HttpResponseRedirect(
             reverse_lazy("dtd_request:thanks", kwargs={"code": code})
