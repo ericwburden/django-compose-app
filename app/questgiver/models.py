@@ -62,7 +62,7 @@ class Quest(models.Model):
         return Event.objects.filter(quest=self.id).order_by("-created_at").first()
 
     def status(self):
-        return self.last_event().event_type if self.last_event() else 'ERROR'
+        return self.last_event().event_type if self.last_event() else "ERROR"
 
     def status_label(self):
         return EventType[self.status()].value

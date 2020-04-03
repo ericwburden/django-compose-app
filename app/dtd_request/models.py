@@ -90,20 +90,20 @@ class Request(models.Model):
     def type_of_need(self):
         need_count = self.domain_set.count()
         if not need_count:
-            return 'None Listed'
+            return "None Listed"
         if need_count == 1:
             return str(self.domain_set.first())
         if need_count > 1:
-            return 'Multiple'
+            return "Multiple"
 
     def needs(self):
         return self.domain_set.all()
 
+
 class Domain(models.Model):
     request = models.ForeignKey(Request, on_delete=models.CASCADE)
     domain = models.IntegerField(
-        choices=domains,
-        verbose_name="What kind of help are you looking for?",
+        choices=domains, verbose_name="What kind of help are you looking for?",
     )
 
     def __str__(self):

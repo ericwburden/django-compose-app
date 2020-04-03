@@ -22,13 +22,12 @@ class IndexView(generic.ListView):
         """
         All quests with a most recent status of 'Approved' or 'Reposted'
         """
-        open_quests = (
-            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
-            .filter(
-                Q(event__created_at=F('latest_event_date')),
-                Q(event__event_type=EventType.APPROVE.name)
-                | Q(event__event_type=EventType.REPOST.name)
-            )
+        open_quests = Quest.objects.annotate(
+            latest_event_date=Max("event__created_at")
+        ).filter(
+            Q(event__created_at=F("latest_event_date")),
+            Q(event__event_type=EventType.APPROVE.name)
+            | Q(event__event_type=EventType.REPOST.name),
         )
         return sorted(open_quests, key=lambda x: x.sort_order())
 
@@ -41,13 +40,12 @@ class DetailView(generic.DetailView):
         """
         All quests with a most recent status of 'Approved' or 'Reposted'
         """
-        return (
-            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
-            .filter(
-                Q(event__created_at=F('latest_event_date')),
-                Q(event__event_type=EventType.APPROVE.name)
-                | Q(event__event_type=EventType.REPOST.name)
-            )
+        return Quest.objects.annotate(
+            latest_event_date=Max("event__created_at")
+        ).filter(
+            Q(event__created_at=F("latest_event_date")),
+            Q(event__event_type=EventType.APPROVE.name)
+            | Q(event__event_type=EventType.REPOST.name),
         )
 
 
@@ -94,12 +92,11 @@ class OverdueView(LoginRequiredMixin, generic.ListView):
         """
         All quests with a most recent status of 'Accepted' that is marked overdue
         """
-        accepted_requests = (
-            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
-            .filter(
-                event__created_at=F('latest_event_date'),
-                event__event_type=EventType.ACCEPT.name
-            )
+        accepted_requests = Quest.objects.annotate(
+            latest_event_date=Max("event__created_at")
+        ).filter(
+            event__created_at=F("latest_event_date"),
+            event__event_type=EventType.ACCEPT.name,
         )
         return [q for q in accepted_requests if q.is_overdue()]
 
@@ -112,12 +109,11 @@ class AbandonedView(LoginRequiredMixin, generic.ListView):
         """
         All quests with a most recent status of 'Abandoned'
         """
-        return (
-            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
-            .filter(
-                event__created_at=F('latest_event_date'),
-                event__event_type=EventType.ABANDON.name
-            )
+        return Quest.objects.annotate(
+            latest_event_date=Max("event__created_at")
+        ).filter(
+            event__created_at=F("latest_event_date"),
+            event__event_type=EventType.ABANDON.name,
         )
 
 
@@ -129,12 +125,11 @@ class CompletedView(LoginRequiredMixin, generic.ListView):
         """
         All quests with a most recent status of 'Completed'
         """
-        return (
-            Quest.objects.annotate(latest_event_date = Max('event__created_at'))
-            .filter(
-                event__created_at=F('latest_event_date'),
-                event__event_type=EventType.COMPLETE.name
-            )
+        return Quest.objects.annotate(
+            latest_event_date=Max("event__created_at")
+        ).filter(
+            event__created_at=F("latest_event_date"),
+            event__event_type=EventType.COMPLETE.name,
         )
 
 

@@ -13,7 +13,7 @@ class QuestAdmin(admin.ModelAdmin):
 class EventAdmin(admin.ModelAdmin):
     timezone.activate(pytz.timezone("America/Chicago"))
     list_display = ("quest", "event_type", "created_at")
-    list_filter = ('event_type', )
+    list_filter = ("event_type",)
 
 
 admin.site.register(Quest, QuestAdmin)

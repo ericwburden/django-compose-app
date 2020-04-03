@@ -18,9 +18,11 @@ class RequestForm(forms.ModelForm):
 class DomainForm(forms.ModelForm):
     class Meta:
         model = Domain
-        fields = ['domain',]
+        fields = [
+            "domain",
+        ]
         widgets = {
-            'domain': forms.Select(attrs={'class': "form-control", 'required': True})
+            "domain": forms.Select(attrs={"class": "form-control", "required": True})
         }
 
 
