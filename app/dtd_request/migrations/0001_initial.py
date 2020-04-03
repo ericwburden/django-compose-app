@@ -50,13 +50,4 @@ class Migration(migrations.Migration):
                 ('request', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dtd_request.Request')),
             ],
         ),
-        migrations.CreateModel(
-            name='DomainAssessment',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', models.IntegerField()),
-                ('description', models.TextField()),
-                ('domain', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dtd_request.Domain')),
-            ],
-        ),
     ]

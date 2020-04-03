@@ -26,12 +26,6 @@ class Domain(models.Model):
         return self.label
 
 
-class DomainAssessment(models.Model):
-    domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    description = models.TextField()
-
-
 class Request(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -62,9 +56,6 @@ class Request(models.Model):
         on_delete=models.CASCADE,
         verbose_name="What kind of help are you looking for?",
         blank=False,
-    )
-    domain_score = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(10), MinValueValidator(1)]
     )
     add_info = models.TextField(
         verbose_name="Please provide any additional information here",
