@@ -5,6 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 # create directory for the app user
 RUN mkdir -p /home/app
+RUN mkdir -p /home/app/staticfiles
 
 # create the app user
 RUN useradd -ms /bin/bash app
