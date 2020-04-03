@@ -4,7 +4,7 @@ from django.conf import settings
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
-import uuid
+import dtd_request.models
 
 
 class Migration(migrations.Migration):
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('domain_score', models.IntegerField(blank=True, null=True, validators=[django.core.validators.MaxValueValidator(10), django.core.validators.MinValueValidator(1)])),
                 ('add_info', models.TextField(help_text="Share anything else you'd like for us to know", verbose_name='Please provide any additional information here')),
                 ('type_of_need', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dtd_request.Domain', verbose_name='What kind of help are you looking for?')),
-                ('confirmation_code', models.CharField(default=uuid.uuid4, max_length=36)),
+                ('confirmation_code', models.CharField(default=dtd_request.models.short_code, max_length=8)),
             ],
         ),
         migrations.CreateModel(
