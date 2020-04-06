@@ -21,6 +21,8 @@ app/*/migrations/*.py
 !app/*/migrations/__init__.py
 !app/questgiver/migrations/000_admin.py
 !app/dtd_request/migrations/0001_initial.py
+!app/dtd_request/migrations/0002_response_note.py
+!app/dtd_calls/migrations/0001_initial.py
 
 # Static Files #
 app/staticfiles/*

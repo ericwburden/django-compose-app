@@ -1,6 +1,6 @@
 import logging
 
-from .forms import RequestForm, MyRequestSearchForm, RequestDomainFormset, LinkReferralForm
+from .forms import RequestForm, MyRequestSearchForm, RequestDomainFormset, LinkReferralForm, UpdateStatusForm
 from .models import Request, Response
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -93,18 +93,18 @@ class ManageRequests(LoginRequiredMixin, ListView):
         )
 
 
-class UpdateRequest(LoginRequiredMixin, RedirectView):
+class UpdateRequest(LoginRequiredMixin, CreateView):
     login_url = '/login/'
-    pattern_name = "dtd_request:manage"
+    model = Response
+    form_class = UpdateStatusForm
+    template_name = "dtd_request/referral-note.html"
+    success_url ='/manage/'
 
-    def get_redirect_url(self, *args, **kwargs):
-        request = get_object_or_404(Request, pk=self.kwargs["pk"])
-        response = Response(
-            request=request, status=self.kwargs["status"], created_by=self.request.user
-        )
-        response.save()
-        # return super().get_redirect_url(*args, **kwargs)
-        return reverse("dtd_request:manage")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['status'] = self.kwargs['status']
+        context['request'] = self.kwargs['pk']
+        return context
 
 
 class LinkReferral(LoginRequiredMixin, UpdateView):

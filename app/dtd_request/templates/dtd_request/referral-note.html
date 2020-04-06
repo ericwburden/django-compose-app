@@ -1,0 +1,85 @@
+{% extends "./base.html" %}
+
+{% load static %}
+
+{% block title %}Referral Requested!{% endblock %}
+
+{% block content %}
+
+<div class="container p-2">
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-6 col-sm-6 col-xs-12 text-center">
+      <h4>Status</h4>
+      <h3>{{ status }}</h3>
+    </div>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-4 col-md-6 col-xs-12">
+        <div class="form-group d-none">
+          {{ form.status.errors }}
+          {{ form.status.label_tag }}
+          <input 
+            type="text" 
+            name="{{ form.status.name }}"
+            id="{{ form.status.id_for_label  }}"
+            class="form-control" 
+            value="{{ status }}"
+            placeholder="{{ form.status.help_text|safe }}" 
+            aria-label="{{ form.status.label }}" 
+            aria-describedby="basic-addon2"
+            readonly
+            required>
+        </div>
+        <div class="form-group d-none">
+          {{ form.request.errors }}
+          {{ form.request.label_tag }}
+          <input 
+            type="text" 
+            name="{{ form.request.name }}"
+            id="{{ form.request.id_for_label  }}"
+            class="form-control" 
+            value="{{ request }}"
+            placeholder="{{ form.request.help_text|safe }}" 
+            aria-label="{{ form.request.label }}" 
+            aria-describedby="basic-addon2"
+            readonly
+            required>
+        </div>
+        <div class="form-group d-none">
+          {{ form.created_by.errors }}
+          {{ form.created_by.label_tag }}
+          <input 
+            type="text" 
+            name="{{ form.created_by.name }}"
+            id="{{ form.created_by.id_for_label  }}"
+            class="form-control" 
+            value="{{ user.id }}"
+            placeholder="{{ form.created_by.help_text|safe }}" 
+            aria-label="{{ form.created_by.label }}" 
+            aria-describedby="basic-addon2"
+            readonly
+            required>
+        </div>
+        <div class="form-group my-2">
+          {{form.note.errors}}
+          {{ form.note.label_tag }}
+          {{ form.note }}
+          {% if form.note.help_text %}
+            <small class="form-text text-muted">{{ form.note.help_text|safe }}</small>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+      <div class="col-4 text-center">
+        <input type="submit" value="Update" class="btn btn-primary">
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+{% endblock %}

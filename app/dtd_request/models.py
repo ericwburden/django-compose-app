@@ -88,6 +88,9 @@ class Request(models.Model):
     def status(self):
         return self.last_response().status if self.last_response() else "PENDING"
 
+    def note(self):
+        return self.last_response().note if self.last_response() else "No note to display"
+
     def type_of_need(self):
         need_count = self.domain_set.count()
         if not need_count:
@@ -125,3 +128,4 @@ class Response(models.Model):
         related_name="response_created_by",
     )
     status = models.CharField(max_length=9, choices=review_choices)
+    note = models.TextField(blank=True, null=True, verbose_name="Please provide an update note (this note will be visible to the client)")
