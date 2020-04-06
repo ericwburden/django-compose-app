@@ -40,4 +40,4 @@ class CallListView(LoginRequiredMixin, ListView):
     login_url = '/login/'
     model = Call
     template_name = "dtd_calls/list_call.html"
-    paginate_by = 2
+    paginate_by = 25
