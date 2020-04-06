@@ -20,6 +20,17 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
 
+  <style type="text/css">
+    #navbarSupportedContent > ul > li.nav-item:hover {
+      background-color: #ccc !important;
+      color: #fff !important;
+    }
+
+    #navbarSupportedContent > ul > li.nav-item:hover>a {
+      color: #fff !important;
+    }
+  </style>
+
   
   <title>{% block title %}Page Title{% endblock %}</title>
 </head>
@@ -33,17 +44,21 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class="nav-item border-left">
           <a class="nav-link" href="{% url 'dtd_request:my_request_search' %}">View My Requests</a>
         </li>
         {% if user.is_authenticated %}
-        <li class="nav-item active">
+        <li class="nav-item border-left">
           <a class="nav-link" href="{% url 'dtd_request:manage' %}">Manage Requests</a>
-        </li><li class="nav-item active">
+        </li>
+        <li class="nav-item border-left">
           <a class="nav-link" href="{% url 'dtd_calls:call_create' %}">New Call</a>
-        </li><li class="nav-item active">
+        </li>
+        <li class="nav-item border-left border-right">
           <a class="nav-link" href="{% url 'dtd_calls:call_list' %}">Review Calls</a>
         </li>
+        {% else %}
+        <li class="nav-item border-left"></li>
         {% endif %}
       </ul>
       {% if user.is_authenticated %}
