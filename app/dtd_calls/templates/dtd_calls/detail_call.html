@@ -1,0 +1,38 @@
+{% extends "dtd_request/base.html" %}
+
+{% load static %}
+
+{% block title %}Review Call{% endblock %}
+
+{% block content %}
+
+<div class="container p-2 bg-light">
+  <div class="row py-2">
+    <div class="col-12">
+      <ul>
+        <li><b>Record Created: </b>{{ call.created_at }}</li>
+        <li><b>Last Updated: </b>{{ call.updated_at }}</li>
+        <li><b>Call Started: </b>{{ call.started_at }}</li>
+        <li><b>Call Ended: </b>{{ call.ended_at }}</li>
+        <li><b>Call From: </b>{{ call.caller_number }}</li>
+        <li><b>Caller Zip: </b>{{ call.caller_zip }}</li>
+        <li><b>Related to Covid-19? </b>{{ call.covid_related }}</li>
+        <li><b>Was caller referred? </b>{{ call.client_referred }}</li>
+        <li><b>Referral ID: </b>{{ call.referral_id }}</li>
+        <li><b>Notes: </b>{{ call.notes }}</li>
+        <li><b>Call Taken By: </b>{{ call.operator }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <a class="btn btn-primary" href="{% url 'dtd_calls:call_create' %}">New Call</a>
+    </div>
+  </div>
+</div>
+
+<script>
+
+</script>
+
+{% endblock %}

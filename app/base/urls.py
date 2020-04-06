@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path("", include("dtd_request.urls")),
+    path("call/", include("dtd_calls.urls")),
     path("help/", include("questgiver.urls")),
     path("admin/", admin.site.urls),
 ]

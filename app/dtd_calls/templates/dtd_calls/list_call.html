@@ -1,0 +1,86 @@
+{% extends "dtd_request/base.html" %}
+
+{% load static %}
+
+{% block title %}Call List{% endblock %}
+
+{% block content %}
+
+<div class="container p-2">
+  <div class="row py-2">
+    <div class="col-12">
+      <div class="row mb-4">
+        <div class="col-sm-2"><b>Call ID</b></div>
+        <div class="col-sm-4"><b>Call Started</b></div>
+        <div class="col-sm-4"><b>Operator</b></div>
+        <div class="col-sm-2"><b>Referred?</b></div>
+      </div>
+      {% for call in page_obj %}
+        <div id="accordion">
+          <div class="card">
+            <div class="card-header" id="heading_{{call.id}}">
+              <div class="row">
+                <div class="col-sm-2">
+                  <a class="alert-link" data-toggle="collapse" data-target="#collapse_{{call.id}}" aria-expanded="true" aria-controls="collapse_{{call.id}}">
+                    {{ call.id }}
+                  </a>
+                </div>
+                <div class="col-sm-4">{{ call.started_at }}</div>
+                <div class="col-sm-4">{{ call.operator }}</div>
+                <div class="col-sm-2">{{ call.client_referred }}</div>
+              </div>
+            </div>
+        
+            <div id="collapse_{{call.id}}" class="collapse" aria-labelledby="heading_{{call.id}}" data-parent="#accordion">
+              <div class="card-body">
+                <ul>
+                  <li><b>Record Created: </b>{{ call.created_at }}</li>
+                  <li><b>Last Updated: </b>{{ call.updated_at }}</li>
+                  <li><b>Call Started: </b>{{ call.started_at }}</li>
+                  <li><b>Call Ended: </b>{{ call.ended_at }}</li>
+                  <li><b>Call Duration: </b>{{ call.duration }}</li>
+                  <li><b>Call From: </b>{{ call.caller_number }}</li>
+                  <li><b>Caller Zip: </b>{{ call.caller_zip }}</li>
+                  <li><b>Related to Covid-19? </b>{{ call.covid_related }}</li>
+                  <li><b>Was caller referred? </b>{{ call.client_referred }}</li>
+                  <li><b>Referral ID: </b>{{ call.referral_id }}</li>
+                  <li><b>Notes: </b>{{ call.notes }}</li>
+                  <li><b>Call Taken By: </b>{{ call.operator }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="pagination">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <a class="btn btn-primary" href="{% url 'dtd_calls:call_create' %}">New Call</a>
+    </div>
+  </div>
+</div>
+
+<script>
+
+</script>
+
+{% endblock %}
