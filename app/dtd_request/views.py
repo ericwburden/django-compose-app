@@ -78,6 +78,7 @@ class MyRequest(DetailView):
 
 
 class ManageRequests(LoginRequiredMixin, ListView):
+    login_url = '/login/'
     template_name = "dtd_request/manage-requests.html"
     context_object_name = "requests"
 
@@ -93,6 +94,7 @@ class ManageRequests(LoginRequiredMixin, ListView):
 
 
 class UpdateRequest(LoginRequiredMixin, RedirectView):
+    login_url = '/login/'
     pattern_name = "dtd_request:manage"
 
     def get_redirect_url(self, *args, **kwargs):
@@ -106,6 +108,7 @@ class UpdateRequest(LoginRequiredMixin, RedirectView):
 
 
 class LinkReferral(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
     model = Request
     form_class = LinkReferralForm
     template_name = "dtd_request/link_referral.html"

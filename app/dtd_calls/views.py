@@ -14,6 +14,7 @@ from django.urls import reverse_lazy
 
 
 class CallCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
     model = Call
     template_name = "dtd_calls/create_call.html"
     form_class = CallForm
@@ -30,11 +31,13 @@ class CallCreateView(LoginRequiredMixin, CreateView):
 
 
 class CallDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
     model = Call
     template_name = "dtd_calls/detail_call.html"
 
 
 class CallListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
     model = Call
     template_name = "dtd_calls/list_call.html"
     paginate_by = 2
