@@ -37,7 +37,16 @@
       </div>
     </div>
     <div class="row py-2">
-      <div class="col-sm-4">
+      <div class="col-sm-3">
+        <div class="form-group">
+          {{ form.call_type.label_tag }}
+          {{ form.call_type }}
+          <div class="text-danger">
+            {{ form.call_type.errors }}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
         <div class="form-group">
           {{ form.covid_related.label_tag }}
           {{ form.covid_related }}
@@ -46,7 +55,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="form-group">
           {{ form.client_referred.label_tag }}
           {{ form.client_referred }}
@@ -55,7 +64,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="form-group">
           {{ form.referral_id.label_tag }}
           {{ form.referral_id }}

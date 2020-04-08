@@ -51,8 +51,9 @@
                       <li><b>Call Taken By: </b>{{ call.operator }}</li>
                     </ul>
                   </div>
-                  <div class="col-sm-2">
-                    <a class="btn btn-primary" href="{% url 'dtd_calls:call_update' call.id  %}">Update Call</a>
+                  <div class="col-sm-2 text-center">
+                    <a class="btn btn-primary my-2" href="{% url 'dtd_calls:call_update' call.id  %}">Update Call</a>
+                    <a class="btn btn-primary my-2" href="{% url 'dtd_calls:call_detail' call.id  %}">Direct Link</a>
                   </div>
                 </div>
               </div>

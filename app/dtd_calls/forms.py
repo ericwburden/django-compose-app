@@ -10,6 +10,7 @@ class CallForm(forms.ModelForm):
             'ended_at',
             'caller_number',
             'caller_zip',
+            'call_type',
             'covid_related',
             'client_referred',
             'referral_id',
@@ -28,6 +29,7 @@ class UpdateCallForm(forms.ModelForm):
         fields = [
             'caller_number',
             'caller_zip',
+            'call_type',
             'covid_related',
             'client_referred',
             'referral_id',

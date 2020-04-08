@@ -4,6 +4,8 @@ from django.db import models
 
 
 class Call(models.Model):
+    INCOMING = "Incoming"
+    OUTGOING = "Outgoing"
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     started_at = models.DateTimeField(verbose_name='Call Started')
@@ -20,6 +22,7 @@ class Call(models.Model):
         verbose_name="Caller Zip Code",
         help_text="#####",
     )
+    call_type = models.CharField(max_length=8, choices=((INCOMING, "Incoming"), (OUTGOING, "Outgoing")), default="Incoming", verbose_name="Type of Call")
     covid_related = models.BooleanField(verbose_name='Is this call related to Covid-19?', default=False)
     client_referred = models.BooleanField(verbose_name='Was this client referred to a provider?', default=False)
     referral_id = models.IntegerField(verbose_name='Referral ID', blank=True, null=True)
