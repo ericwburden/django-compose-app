@@ -81,6 +81,7 @@ class ManageRequests(LoginRequiredMixin, ListView):
     login_url = '/login/'
     template_name = "dtd_request/manage-requests.html"
     context_object_name = "requests"
+    paginate_by = 50
 
     def get_queryset(self):
         return (

@@ -84,15 +84,44 @@
                   <dd class="ml-2">- {{ need }}</dd>
                 {% endfor %}
               {% endif %}
+              <dt>Additional Details</dt>
+              <dd class="ml-2">- <b>Confirmation Code: </b> {{ request.confirmation_code }}</dd>
+              {% if request.referral_id %}
+              <dd class="ml-2">- <b>Referral ID: </b> {{ request.referral_id }}</dd>
+              {% endif %}
             </dl>
           </div>
           <div class="col-sm-6">
-            <p><b>Notes:</b></p>
+            <p><b>Caller notes:</b></p>
             <p>{{ request.add_info }}</p>
+            <hr>
+            <p><b>Response note:</b></p>
+            <p>{{ request.note }}</p>
           </div>
         </div>
       </div>
       {% endfor %}
+      <div class="row">
+        <div class="col-12">
+          <div class="pagination">
+            <span class="step-links">
+              {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+    
+              <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+    
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
