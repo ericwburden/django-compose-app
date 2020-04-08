@@ -51,7 +51,7 @@ class Request(models.Model):
         max_length=200, blank=True, null=True, verbose_name="Your Email Address"
     )
     primary_phone = models.CharField(
-        validators=[RegexValidator(r"^\+?1?\d{9,15}$")],
+        validators=[RegexValidator(r"^\+?1?\d{3}-?\d{3}-?\d{4}$")],
         max_length=17,
         blank=True,
         null=True,
@@ -59,7 +59,7 @@ class Request(models.Model):
         help_text="###-###-####",
     )
     secondary_phone = models.CharField(
-        validators=[RegexValidator(r"^\+?1?\d{9,15}$")],
+        validators=[RegexValidator(r"^\+?1?\d{3}-?\d{3}-?\d{4}$")],
         max_length=17,
         blank=True,
         null=True,

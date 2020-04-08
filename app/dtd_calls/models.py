@@ -9,7 +9,7 @@ class Call(models.Model):
     started_at = models.DateTimeField(verbose_name='Call Started')
     ended_at = models.DateTimeField(verbose_name='Call Ended')
     caller_number = models.CharField(
-        validators=[RegexValidator(r"^\+?1?\d{9,15}$")],
+        validators=[RegexValidator(r"^\+?1?\d{3}-?\d{3}-?\d{4}$")],
         max_length=17,
         verbose_name="Caller Phone Number",
         help_text="###-###-####",
