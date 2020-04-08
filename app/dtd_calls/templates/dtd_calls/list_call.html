@@ -9,21 +9,22 @@
 <div class="container p-2">
   <div class="row py-2">
     <div class="col-12">
-      <div class="row mb-4">
+      <div class="row mb-4 mx-2 ">
         <div class="col-sm-2"><b>Call ID</b></div>
         <div class="col-sm-4"><b>Call Started</b></div>
         <div class="col-sm-4"><b>Operator</b></div>
         <div class="col-sm-2"><b>Referred?</b></div>
       </div>
-      {% for call in page_obj %}
-        <div id="accordion">
-          <div class="card">
+      
+      <div id="accordion">
+        {% for call in page_obj %}
+          <div class="card my-1">
             <div class="card-header" id="heading_{{call.id}}">
-              <div class="row">
-                <div class="col-sm-2">
-                  <a class="alert-link" data-toggle="collapse" data-target="#collapse_{{call.id}}" aria-expanded="true" aria-controls="collapse_{{call.id}}">
+              <div class="row position-relative">
+                <div class="col-sm-2 position-static">
+                  <button class="btn btn-link stretched-link" data-toggle="collapse" data-target="#collapse_{{call.id}}" aria-expanded="true" aria-controls="collapse_{{call.id}}">
                     {{ call.id }}
-                  </a>
+                  </button>
                 </div>
                 <div class="col-sm-4">{{ call.started_at }}</div>
                 <div class="col-sm-4">{{ call.operator }}</div>
@@ -33,25 +34,33 @@
         
             <div id="collapse_{{call.id}}" class="collapse" aria-labelledby="heading_{{call.id}}" data-parent="#accordion">
               <div class="card-body">
-                <ul>
-                  <li><b>Record Created: </b>{{ call.created_at }}</li>
-                  <li><b>Last Updated: </b>{{ call.updated_at }}</li>
-                  <li><b>Call Started: </b>{{ call.started_at }}</li>
-                  <li><b>Call Ended: </b>{{ call.ended_at }}</li>
-                  <li><b>Call Duration: </b>{{ call.duration }}</li>
-                  <li><b>Call From: </b>{{ call.caller_number }}</li>
-                  <li><b>Caller Zip: </b>{{ call.caller_zip }}</li>
-                  <li><b>Related to Covid-19? </b>{{ call.covid_related }}</li>
-                  <li><b>Was caller referred? </b>{{ call.client_referred }}</li>
-                  <li><b>Referral ID: </b>{{ call.referral_id }}</li>
-                  <li><b>Notes: </b>{{ call.notes }}</li>
-                  <li><b>Call Taken By: </b>{{ call.operator }}</li>
-                </ul>
+                <div class="row">
+                  <div class="col-sm-10">
+                    <ul>
+                      <li><b>Record Created: </b>{{ call.created_at }}</li>
+                      <li><b>Last Updated: </b>{{ call.updated_at }}</li>
+                      <li><b>Call Started: </b>{{ call.started_at }}</li>
+                      <li><b>Call Ended: </b>{{ call.ended_at }}</li>
+                      <li><b>Call Duration: </b>{{ call.duration }}</li>
+                      <li><b>Call From: </b>{{ call.caller_number }}</li>
+                      <li><b>Caller Zip: </b>{{ call.caller_zip }}</li>
+                      <li><b>Related to Covid-19? </b>{{ call.covid_related }}</li>
+                      <li><b>Was caller referred? </b>{{ call.client_referred }}</li>
+                      <li><b>Referral ID: </b>{{ call.referral_id }}</li>
+                      <li><b>Notes: </b>{{ call.notes }}</li>
+                      <li><b>Call Taken By: </b>{{ call.operator }}</li>
+                    </ul>
+                  </div>
+                  <div class="col-sm-2">
+                    <a class="btn btn-primary" href="{% url 'dtd_calls:call_update' call.id  %}">Update Call</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
+      
 
       <div class="pagination">
         <span class="step-links">

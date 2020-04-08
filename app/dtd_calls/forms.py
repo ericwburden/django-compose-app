@@ -20,3 +20,21 @@ class CallForm(forms.ModelForm):
         super(CallForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+
+class UpdateCallForm(forms.ModelForm):
+    class Meta:
+        model = Call
+        fields = [
+            'caller_number',
+            'caller_zip',
+            'covid_related',
+            'client_referred',
+            'referral_id',
+            'notes'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateCallForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

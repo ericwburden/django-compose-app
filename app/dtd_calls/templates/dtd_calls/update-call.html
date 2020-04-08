@@ -1,0 +1,100 @@
+{% extends "dtd_request/base.html" %}
+
+{% load static %}
+
+{% block title %}Update Call Information{% endblock %}
+
+{% block content %}
+
+<div class="container p-2 bg-light">
+  <form action="{% url 'dtd_calls:call_update' call.id  %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-12">
+        {{ form.non_field_errors }}
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col-6">
+        <div class="form-group">
+          {{ form.caller_number.label_tag }}
+          {{ form.caller_number }}
+          <small class="form-text text-muted">{{ form.caller_number.help_text|safe }}</small>
+          <div class="text-danger">
+            {{ form.caller_number.errors }}
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          {{ form.caller_zip.label_tag }}
+          {{ form.caller_zip }}
+          <small class="form-text text-muted">{{ form.caller_zip.help_text|safe }}</small>
+          <div class="text-danger">
+            {{ form.caller_zip.errors }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col-sm-4">
+        <div class="form-group">
+          {{ form.covid_related.label_tag }}
+          {{ form.covid_related }}
+          <div class="text-danger">
+            {{ form.covid_related.errors }}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          {{ form.client_referred.label_tag }}
+          {{ form.client_referred }}
+          <div class="text-danger">
+            {{ form.client_referred.errors }}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          {{ form.referral_id.label_tag }}
+          {{ form.referral_id }}
+          <div class="text-danger">
+            {{ form.referral_id.errors }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col-12">
+        <div class="form-group">
+          {{ form.notes.label_tag }}
+          {{ form.notes }}
+          <div class="text-danger">
+            {{ form.notes.errors }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+      <div class="col-4 text-center">
+        <input type="submit" value="Update Call Information" class="btn btn-primary">
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  $(function() {
+    $("#{{ form.referral_id.id_for_label }}").prop('readonly', true).prop('required', false);
+  });
+
+  $("#{{ form.client_referred.id_for_label }}").on("click", function () { 
+    if($(this).prop("checked")==true)
+    $("#{{ form.referral_id.id_for_label }}").prop('readonly', false).prop('required', true); 
+    else
+    $("#{{ form.referral_id.id_for_label }}").prop('readonly', true).prop('required', false);
+  });
+</script>
+
+{% endblock %}

@@ -1,12 +1,12 @@
 import logging
 
-from .forms import CallForm
+from .forms import CallForm, UpdateCallForm
 from .models import Call
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
@@ -30,6 +30,14 @@ class CallCreateView(LoginRequiredMixin, CreateView):
         )
 
 
+class CallUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
+    model = Call
+    template_name = "dtd_calls/update-call.html"
+    form_class = UpdateCallForm
+    success_url = reverse_lazy("dtd_calls:call_list")
+
+
 class CallDetailView(LoginRequiredMixin, DetailView):
     login_url = '/login/'
     model = Call
@@ -41,3 +49,4 @@ class CallListView(LoginRequiredMixin, ListView):
     model = Call
     template_name = "dtd_calls/list_call.html"
     paginate_by = 25
+    ordering = ["-created_at"]
