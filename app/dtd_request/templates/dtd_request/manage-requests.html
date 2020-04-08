@@ -10,8 +10,9 @@
     <div class="row py-1 my-2 bg-primary text-light rounded rounded-lg">
       <div class="col-sm-3 text-center"><b>Contact Name</b></div>
       <div class="col-sm-3 text-center"><b>Domain</b></div>
-      <div class="col-sm-3 text-center"><b>Last Updated</b></div>
-      <div class="col-sm-3 text-center"><b>Current Status</b></div>
+      <div class="col-sm-2 text-center"><b>Last Updated</b></div>
+      <div class="col-sm-2 text-center"><b>Current Status</b></div>
+      <div class="col-sm-2 text-center"><b>Claimed By</b></div>
     </div>
     <div class="accordion" id="accordion">
       {% for request in requests %}
@@ -35,8 +36,8 @@
           </a>
         </div>
         <div class="col-sm-3 text-center">{{ request.type_of_need }}</div>
-        <div class="col-sm-3 text-center">{{ request.latest_response|date:'F d, Y' }}</div>
-        <div class="col-sm-3 text-center">
+        <div class="col-sm-2 text-center">{{ request.latest_response|date:'F d, Y' }}</div>
+        <div class="col-sm-2 text-center">
           <div class="dropdown text-center">
             <a 
               href="#"
@@ -69,6 +70,7 @@
             </div>
           </div>
         </div>
+        <div class="col-sm-2 text-center">{{ request.claimed_by }}</div>
       </div>
       <div id="collapse_{{request.id}}" class="collapse" data-parent="#accordion">
         <div class="row bg-light rounded-bottom rounded-lg">

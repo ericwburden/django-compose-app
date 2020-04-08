@@ -91,6 +91,9 @@ class Request(models.Model):
     def note(self):
         return self.last_response().note if self.last_response() else "No note to display"
 
+    def claimed_by(self):
+        return self.last_response().created_by if self.last_response() else "Not Claimed"
+
     def type_of_need(self):
         need_count = self.domain_set.count()
         if not need_count:
