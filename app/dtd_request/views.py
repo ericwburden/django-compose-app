@@ -122,3 +122,7 @@ class LinkReferral(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("dtd_request:update", args=[self.object.id, "REFERRED"])
+
+
+class RequestDomainReport(LoginRequiredMixin, TemplateView):
+    template_name = "dtd_request/request-domain-report.html"

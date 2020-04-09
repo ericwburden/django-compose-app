@@ -1,0 +1,70 @@
+{% extends "dtd_reports/report-nav.html" %}
+
+{% block report %}
+
+<div class="container p-2 bg-light">
+  <div class="row">
+    <div class="col">
+      <canvas id="call-type-chart" data-url="{% url 'dtd_reports:request-domain-report-data' %}"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+  $(function() {
+    $("#request-domains-report").addClass("active");
+  });
+
+  $(function () {
+
+    var $callTypeChart = $("#call-type-chart");
+    $.ajax({
+      url: $callTypeChart.data("url"),
+      success: function (data) {
+
+        var ctx = $callTypeChart[0].getContext("2d");
+
+        Chart.scaleService.updateScaleDefaults('linear', {
+            ticks: {
+                min: 0
+            }
+        });
+
+        new Chart(ctx, {
+          type: 'polarArea',
+          data: {
+            labels: data.labels,
+            datasets: [
+              {
+                label: '# of Requests',
+                backgroundColor: [
+                  '#16b7ba', '#5c17ba', '#ba1731', '#92ba17',
+                  '#178bba', '#8b17ba', '#ba2a17', '#63ba17',
+                  '#175cba', '#b917ba', '#ba5817', '#35ba17',
+                  '#172eba', '#ba178e', '#ba8717', '#17ba26',
+                  '#2e17ba', '#ba175f', '#bab517', '#17ba55'
+                ],
+                data: data.counts
+              }
+            ]          
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: 'left',
+            },
+            title: {
+              display: true,
+              text: 'Total Requests by Domain'
+            }
+          }
+        });
+
+      }
+    });
+
+    });
+</script>
+
+{% endblock %}
