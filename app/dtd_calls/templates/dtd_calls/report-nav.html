@@ -11,7 +11,10 @@
     <div class="col">
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <a class="nav-link" href="#" id="calls-per-day-report">Calls per Day</a>
+          <a class="nav-link" href="{% url 'dtd_calls:call-type-report' %}" id="calls-per-day-report">Calls per Day</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dtd_calls:call-duration-report' %}" id="call-duration-per-day-report">Call Duration per Day</a>
         </li>
       </ul>
     </div>
