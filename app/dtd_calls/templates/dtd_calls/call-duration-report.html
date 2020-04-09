@@ -56,6 +56,11 @@
             title: {
               display: true,
               text: 'Total Call Duration per Day, by Type'
+            },
+            tooltips: {
+              callbacks: {
+                label: (item) => item.yLabel + " minutes"
+              }
             }
           }
         });
@@ -63,7 +68,7 @@
       }
     });
 
-    });
+  });
 </script>
 
 {% endblock %}
