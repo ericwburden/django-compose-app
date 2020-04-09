@@ -64,3 +64,7 @@ class CallTypeReport(LoginRequiredMixin, TemplateView):
 
 class CallDurationReport(LoginRequiredMixin, TemplateView):
     template_name = "dtd_calls/call-duration-report.html"
+
+
+class CallReferralReport(LoginRequiredMixin, TemplateView):
+    template_name = "dtd_calls/call-referral-report.html"

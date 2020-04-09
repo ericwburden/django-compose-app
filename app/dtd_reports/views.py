@@ -54,11 +54,11 @@ def call_duration_report_data(request):
             ),
         )
         .values("call_type", "date")
-        .annotate(total_duration=Sum('duration'))
+        .annotate(total_duration=Sum("duration"))
     )
     for entry in queryset:
         date_string = entry["date"].strftime("%m/%d/%Y")
-        minutes = round(entry['total_duration'].seconds//60)
+        minutes = round(entry["total_duration"].seconds // 60)
         if date_string not in labels:
             labels.append(date_string)
         if entry["call_type"] == "Incoming":
@@ -75,18 +75,28 @@ def call_duration_report_data(request):
     )
 
 
+def call_referral_report_data(request):
+    queryset = Call.objects.values("client_referred").annotate(
+        n=Count("client_referred")
+    )
+    call_count = Call.objects.count()
+
+    labels = [
+        "Referred" if entry["client_referred"] else "Not Referred" 
+        for entry in queryset
+    ]
+    percents = [round((entry["n"] / call_count) * 100) for entry in queryset]
+
+    return JsonResponse(data={"labels": labels, "percents": percents})
+
+
 def request_domain_report_data(request):
-    queryset = Domain.objects.values('domain').annotate(n=Count('domain'))
+    queryset = Domain.objects.values("domain").annotate(n=Count("domain"))
 
     def to_label(domain: int):
         return next(i[-1] for i in domains if i[0] == domain)
 
-    labels = [to_label(entry['domain']) for entry in queryset]
-    counts = [entry['n'] for entry in queryset]
+    labels = [to_label(entry["domain"]) for entry in queryset]
+    counts = [entry["n"] for entry in queryset]
 
-    return JsonResponse(
-        data={
-            "labels": labels,
-            "counts": counts
-        }
-    )
+    return JsonResponse(data={"labels": labels, "counts": counts})

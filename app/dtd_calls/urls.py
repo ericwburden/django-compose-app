@@ -16,4 +16,9 @@ urlpatterns = [
         views.CallDurationReport.as_view(),
         name="call-duration-report",
     ),
+    path(
+        "report/call-referral/",
+        views.CallReferralReport.as_view(),
+        name="call-referral-report",
+    ),
 ]

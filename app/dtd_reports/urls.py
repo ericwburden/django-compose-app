@@ -5,14 +5,17 @@ app_name = "dtd_reports"
 
 urlpatterns = [
     path(
-        "call-type-report",
-        views.call_type_report_data,
-        name="call-type-report-data",
+        "call-type-report", views.call_type_report_data, name="call-type-report-data",
     ),
     path(
         "call-duration-report",
         views.call_duration_report_data,
         name="call-duration-report-data",
+    ),
+    path(
+        "call-referral-report",
+        views.call_referral_report_data,
+        name="call-referral-report-data",
     ),
     path(
         "request-domain-report",
