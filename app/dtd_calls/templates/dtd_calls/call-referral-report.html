@@ -46,7 +46,7 @@
           options: {
             responsive: true,
             legend: {
-              position: 'top',
+              position: 'left',
             },
             title: {
               display: true,
@@ -54,7 +54,10 @@
             },
             tooltips: {
               callbacks: {
-                label: (item) => item.yLabel + " %"
+                label: (item, data) => {
+                  var indice = item.index;                 
+                  return  data.labels[indice] +': '+data.datasets[0].data[indice] + '%';
+                }
               }
             }
           }
