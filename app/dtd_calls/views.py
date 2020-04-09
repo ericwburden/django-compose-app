@@ -3,14 +3,20 @@ import logging
 from .forms import CallForm, UpdateCallForm
 from .models import Call
 
+from datetime import timedelta
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
+from django.utils import timezone
 
 
 class CallCreateView(LoginRequiredMixin, CreateView):
@@ -50,3 +56,30 @@ class CallListView(LoginRequiredMixin, ListView):
     template_name = "dtd_calls/list_call.html"
     paginate_by = 25
     ordering = ["-created_at"]
+
+
+class CallTypeReport(LoginRequiredMixin, TemplateView):
+    template_name = "dtd_calls/call-report.html"
+
+
+def call_type_chart_data(request):
+    labels = []
+    incoming_calls = []
+    outgoing_calls = []
+
+    start_date = timezone.now() - timedelta(days=15)
+    queryset = Call.objects.filter(created_at__gt=start_date).annotate(date=TruncDate('created_at')).values('call_type', 'date').annotate(total_calls=Count('date'))
+    for entry in queryset:
+        date_string = entry['date'].strftime("%m/%d/%Y")
+        if date_string not in labels:
+            labels.append(date_string)
+        if entry['call_type'] == 'Incoming':
+            incoming_calls.append(entry['total_calls'])
+        else:
+            outgoing_calls.append(entry['total_calls'])
+    
+    return JsonResponse(data={
+        'labels': labels,
+        'incoming_calls': incoming_calls,
+        'outgoing_calls': outgoing_calls,
+    })
