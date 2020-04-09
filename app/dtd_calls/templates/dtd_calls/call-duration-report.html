@@ -1,11 +1,11 @@
-{% extends "dtd_calls/report-nav.html" %}
+{% extends "dtd_reports/report-nav.html" %}
 
 {% block report %}
 
 <div class="container p-2 bg-light">
   <div class="row">
     <div class="col">
-      <canvas id="call-duration-chart" data-url="{% url 'dtd_calls:call-duration-report-data' %}"></canvas>
+      <canvas id="call-duration-chart" data-url="{% url 'dtd_reports:call-duration-report-data' %}"></canvas>
     </div>
   </div>
 </div>

@@ -12,18 +12,8 @@ urlpatterns = [
     path("all/", views.CallListView.as_view(), name="call_list"),
     path("report/call-type/", views.CallTypeReport.as_view(), name="call-type-report"),
     path(
-        "report/call-type/data/",
-        views.call_type_chart_data,
-        name="call-type-report-data",
-    ),
-    path(
         "report/call-duration/",
         views.CallDurationReport.as_view(),
         name="call-duration-report",
-    ),
-    path(
-        "report/call-duration/data/",
-        views.call_duration_chart_data,
-        name="call-duration-report-data",
     ),
 ]
