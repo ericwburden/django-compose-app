@@ -41,7 +41,11 @@ class LinkReferralForm(forms.ModelForm):
     class Meta:
         model = Request
         fields = ["referral_id"]
-        widgets = {"referral_id": forms.TextInput(attrs={"class": "form-control", "required": True})}
+        widgets = {
+            "referral_id": forms.TextInput(
+                attrs={"class": "form-control", "required": True}
+            )
+        }
 
 
 class UpdateStatusForm(forms.ModelForm):
@@ -52,5 +56,5 @@ class UpdateStatusForm(forms.ModelForm):
             "request": forms.TextInput(attrs={"class": "form-control"}),
             "created_by": forms.TextInput(attrs={"class": "form-control"}),
             "status": forms.TextInput(attrs={"class": "form-control"}),
-            "note": forms.Textarea(attrs={"class": "form-control", "required": True})
+            "note": forms.Textarea(attrs={"class": "form-control", "required": True}),
         }

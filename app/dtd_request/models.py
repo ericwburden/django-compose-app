@@ -89,10 +89,14 @@ class Request(models.Model):
         return self.last_response().status if self.last_response() else "PENDING"
 
     def note(self):
-        return self.last_response().note if self.last_response() else "No note to display"
+        return (
+            self.last_response().note if self.last_response() else "No note to display"
+        )
 
     def claimed_by(self):
-        return self.last_response().created_by if self.last_response() else "Not Claimed"
+        return (
+            self.last_response().created_by if self.last_response() else "Not Claimed"
+        )
 
     def type_of_need(self):
         need_count = self.domain_set.count()
@@ -131,4 +135,8 @@ class Response(models.Model):
         related_name="response_created_by",
     )
     status = models.CharField(max_length=9, choices=review_choices)
-    note = models.TextField(blank=True, null=True, verbose_name="Please provide an update note (this note will be visible to the client)")
+    note = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Please provide an update note (this note will be visible to the client)",
+    )

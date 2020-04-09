@@ -7,18 +7,40 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dtd_request', '0002_response_note'),
+        ("dtd_request", "0002_response_note"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='request',
-            name='primary_phone',
-            field=models.CharField(blank=True, help_text='###-###-####', max_length=17, null=True, validators=[django.core.validators.RegexValidator('^\\+?1?\\d{3}-?\\d{3}-?\\d{4}$')], verbose_name='Phone number where you can be reached'),
+            model_name="request",
+            name="primary_phone",
+            field=models.CharField(
+                blank=True,
+                help_text="###-###-####",
+                max_length=17,
+                null=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^\\+?1?\\d{3}-?\\d{3}-?\\d{4}$"
+                    )
+                ],
+                verbose_name="Phone number where you can be reached",
+            ),
         ),
         migrations.AlterField(
-            model_name='request',
-            name='secondary_phone',
-            field=models.CharField(blank=True, help_text='###-###-####', max_length=17, null=True, validators=[django.core.validators.RegexValidator('^\\+?1?\\d{3}-?\\d{3}-?\\d{4}$')], verbose_name='Backup phone number'),
+            model_name="request",
+            name="secondary_phone",
+            field=models.CharField(
+                blank=True,
+                help_text="###-###-####",
+                max_length=17,
+                null=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^\\+?1?\\d{3}-?\\d{3}-?\\d{4}$"
+                    )
+                ],
+                verbose_name="Backup phone number",
+            ),
         ),
     ]

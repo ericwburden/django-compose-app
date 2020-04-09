@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dtd_request', '0001_initial'),
+        ("dtd_request", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='response',
-            name='note',
-            field=models.TextField(blank=True, null=True, verbose_name='Please provide an update note (this note will be visible to the client)'),
+            model_name="response",
+            name="note",
+            field=models.TextField(
+                blank=True,
+                null=True,
+                verbose_name="Please provide an update note (this note will be visible to the client)",
+            ),
         ),
     ]

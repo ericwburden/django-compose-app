@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dtd_calls', '0002_phone_regex'),
+        ("dtd_calls", "0002_phone_regex"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='call',
-            name='call_type',
-            field=models.CharField(choices=[('Incoming', 'Incoming'), ('Outgoing', 'Outgoing')], default='Incoming', max_length=8, verbose_name='Type of Call'),
+            model_name="call",
+            name="call_type",
+            field=models.CharField(
+                choices=[("Incoming", "Incoming"), ("Outgoing", "Outgoing")],
+                default="Incoming",
+                max_length=8,
+                verbose_name="Type of Call",
+            ),
         ),
     ]
