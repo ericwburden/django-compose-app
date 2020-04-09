@@ -136,6 +136,10 @@
 </div>
 
 <script>
+  $(function() {
+    $("#new-call").addClass("active");
+  });
+
   $("#setStart").click(function(){
     var date_string = moment().format().replace("T", " ").substring(0,19);
     $("#{{ form.started_at.id_for_label }}").val(date_string);
