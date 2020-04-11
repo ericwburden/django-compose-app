@@ -8,6 +8,7 @@ from .forms import (
     UpdateStatusForm,
 )
 from .models import Request, Response
+from dtd_emails.tasks import status_update_email
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -112,6 +113,11 @@ class UpdateRequest(LoginRequiredMixin, CreateView):
         context["status"] = self.kwargs["status"]
         context["request"] = self.kwargs["pk"]
         return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        status_update_email.delay(self.object.id)
+        return super(UpdateRequest, self).form_valid(form)
 
 
 class LinkReferral(LoginRequiredMixin, UpdateView):

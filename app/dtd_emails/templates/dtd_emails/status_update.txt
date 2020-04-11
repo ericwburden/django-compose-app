@@ -1,0 +1,12 @@
+Your request has been updated by one of our team members. The current status of your
+request is:
+
+- {{status}}
+
+This means {{msg}}
+
+In addition, our staff has left the following note:
+
+{{note}}
+
+{{closing}}
