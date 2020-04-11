@@ -55,8 +55,8 @@
             tooltips: {
               callbacks: {
                 label: (item, data) => {
-                  var indice = item.index;                 
-                  return  data.labels[indice] +': '+data.datasets[0].data[indice] + '%';
+                  var i = item.index;                 
+                  return  data.labels[i] + ': ' + data.datasets[0].data[i] + '%';
                 }
               }
             }
