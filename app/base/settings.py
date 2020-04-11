@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "dtd_request.apps.DtdRequestConfig",
     "dtd_calls.apps.DtdCallsConfig",
     "dtd_reports.apps.DtdReportsConfig",
+    "dtd_emails.apps.DtdEmailsConfig",
     "questgiver.apps.QuestgiverConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -132,3 +133,10 @@ EMAIL_PORT = os.getenv("EMAIL_PORT", "465")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "user@gmail.com")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "!+$@s3kr3+")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", False)
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
