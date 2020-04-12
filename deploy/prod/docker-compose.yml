@@ -166,7 +166,7 @@ services:
 
   celery:
     build: .
-    command: celery -A base worker -l info --uid 1234
+    command: celery -A base worker -l info
     volumes: 
       - $PWD/app:/code
     depends_on:
