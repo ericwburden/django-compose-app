@@ -8,7 +8,7 @@ RUN mkdir -p /home/app
 RUN mkdir -p /home/app/staticfiles
 
 # create the app user
-RUN useradd -ms /bin/bash app
+RUN useradd -u 1234 -ms /bin/bash app
 
 # create the appropriate directories
 ENV APP_HOME=/home/app

@@ -137,7 +137,62 @@ services:
     environment:
       ADMINER_DESIGN: "arcs-material"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://${SERVER_HOSTNAME}:8080"]
+      test: ["CMD", "curl", "-f", "http://adminer:8080"]
       interval: 30s
       timeout: 30s
       retries: 3
+
+  celery:
+    build: .
+    command: celery -A base worker -l info
+    volumes: 
+      - $PWD/app:/code
+    depends_on:
+      - postgres
+      - traefik
+      - redis
+    networks:
+      - internal
+    expose:
+      - 8001
+    labels:
+      - "traefik.http.services.celery.loadbalancer.server.port=8001"
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_DEBUG: ${DJANGO_DEBUG}
+      DJANGO_SUPERUSER: ${DJANGO_SUPERUSER}
+      DJANGO_SU_EMAIL: ${DJANGO_SU_EMAIL}
+      DJANGO_SU_PASSWORD: ${DJANGO_SU_PASSWORD}
+      DJANGO_TZ: ${DJANGO_TZ}
+      DJANGO_USE_TZ: ${DJANGO_USE_TZ}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SERVER_HOSTNAME: ${SERVER_HOSTNAME}
+      SQL_ENGINE: ${SQL_ENGINE}
+      SQL_HOST: ${SQL_HOST}
+      SQL_PORT: ${SQL_PORT}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS}
+      EMAIL_SENDER: ${EMAIL_SENDER}
+    restart: on-failure
+    healthcheck:
+        test: ["CMD", "celery","inspect", "ping", "-A", "base"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+
+  redis:
+    image: redis:alpine
+    networks:
+      - internal
+    labels:
+      - "traefik.http.services.redis.loadbalancer.server.port=6379"
+    healthcheck:
+        test: ["CMD", "redis-cli","ping"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
