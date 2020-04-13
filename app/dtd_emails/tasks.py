@@ -76,7 +76,7 @@ def status_update_email(id: int):
     }
 
     msg_plain = render_to_string("dtd_emails/status_update.txt", params)
-    msg_html = render_to_string("dtd_emails/status_update.html", params)
+    msg_html = render_to_string("dtd_emails/status_update_inline.html", params)
 
     return send_mail(
         "Driving the Dream Update",
