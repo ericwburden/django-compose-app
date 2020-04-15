@@ -28,7 +28,7 @@
               readonly
               required>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="setStart">Set</button>
+                <button class="btn btn-success" type="button" id="setStart">Set</button>
               </div>
           </div>
           <div class="text-danger">
@@ -131,7 +131,7 @@
     </div>
     <div class="row d-flex justify-content-center">
       <div class="col-4 text-center">
-        <input type="submit" value="Submit Call Information" class="btn btn-primary" id="submitBtn" disabled>
+        <input type="submit" value="Submit Call Information" class="btn btn-outline-secondary" id="submitBtn" disabled>
       </div>
     </div>
   </form>
@@ -146,14 +146,18 @@
     var date_string = moment().format().replace("T", " ").substring(0,19);
     $("#{{ form.started_at.id_for_label }}").val(date_string);
     $("#setStart").prop('disabled', true);
-    $("#setEnd").prop('disabled', false);
+    $("#setEnd").prop('disabled', false)
+      .removeClass('btn-outline-secondary')
+      .addClass('btn-success');
   });
 
   $("#setEnd").click(function(){
     var date_string = moment().format().replace("T", " ").substring(0,19);
     $("#{{ form.ended_at.id_for_label }}").val(date_string);
     $("#setEnd").prop('disabled', true);
-    $("#submitBtn").prop('disabled', false);
+    $("#submitBtn").prop('disabled', false)
+      .removeClass('btn-outline-secondary')
+      .addClass('btn-primary');
   });
 
   $(function() {
