@@ -25,7 +25,8 @@
               id="{{ form.started_at.id_for_label }}"
               class="form-control"
               placeholder="{{ form.started_at.help_text|safe }}"
-              readonly>
+              readonly
+              required>
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id="setStart">Set</button>
               </div>
@@ -45,7 +46,8 @@
               id="{{ form.ended_at.id_for_label }}"
               class="form-control"
               placeholder="{{ form.ended_at.help_text|safe }}"
-              readonly>
+              readonly
+              required>
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id="setEnd">Set</button>
               </div>
