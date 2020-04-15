@@ -49,7 +49,7 @@
               readonly
               required>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="setEnd">Set</button>
+                <button class="btn btn-outline-secondary" type="button" id="setEnd" disabled>Set</button>
               </div>
           </div>
           <div class="text-danger">
@@ -131,7 +131,7 @@
     </div>
     <div class="row d-flex justify-content-center">
       <div class="col-4 text-center">
-        <input type="submit" value="Submit Call Information" class="btn btn-primary">
+        <input type="submit" value="Submit Call Information" class="btn btn-primary" id="submitBtn" disabled>
       </div>
     </div>
   </form>
@@ -146,12 +146,14 @@
     var date_string = moment().format().replace("T", " ").substring(0,19);
     $("#{{ form.started_at.id_for_label }}").val(date_string);
     $("#setStart").prop('disabled', true);
+    $("#setEnd").prop('disabled', false);
   });
 
   $("#setEnd").click(function(){
     var date_string = moment().format().replace("T", " ").substring(0,19);
     $("#{{ form.ended_at.id_for_label }}").val(date_string);
     $("#setEnd").prop('disabled', true);
+    $("#submitBtn").prop('disabled', false);
   });
 
   $(function() {
