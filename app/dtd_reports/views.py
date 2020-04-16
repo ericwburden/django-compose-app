@@ -144,6 +144,22 @@ def total_calls_requests_report_data(request):
 # =======================================================================================
 
 
+class CallTypeReport(LoginRequiredMixin, TemplateView):
+    template_name = "dtd_reports/call-type-report.html"
+
+
+class CallDurationReport(LoginRequiredMixin, TemplateView):
+    template_name = "dtd_reports/call-duration-report.html"
+
+
+class CallReferralReport(LoginRequiredMixin, TemplateView):
+    template_name = "dtd_reports/call-referral-report.html"
+
+
+class RequestDomainReport(LoginRequiredMixin, TemplateView):
+    template_name = "dtd_reports/request-domain-report.html"
+
+
 class TotalCallsRequestsReport(LoginRequiredMixin, TemplateView):
     template_name = "dtd_reports/total-calls-requests-report.html"
 

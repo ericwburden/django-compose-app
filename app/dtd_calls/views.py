@@ -56,15 +56,3 @@ class CallListView(LoginRequiredMixin, ListView):
     template_name = "dtd_calls/list_call.html"
     paginate_by = 25
     ordering = ["-created_at"]
-
-
-class CallTypeReport(LoginRequiredMixin, TemplateView):
-    template_name = "dtd_calls/call-type-report.html"
-
-
-class CallDurationReport(LoginRequiredMixin, TemplateView):
-    template_name = "dtd_calls/call-duration-report.html"
-
-
-class CallReferralReport(LoginRequiredMixin, TemplateView):
-    template_name = "dtd_calls/call-referral-report.html"

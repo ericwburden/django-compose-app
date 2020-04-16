@@ -10,15 +10,4 @@ urlpatterns = [
     path("<int:pk>/", views.CallDetailView.as_view(), name="call_detail"),
     path("update/<int:pk>/", views.CallUpdateView.as_view(), name="call_update"),
     path("all/", views.CallListView.as_view(), name="call_list"),
-    path("report/call-type/", views.CallTypeReport.as_view(), name="call-type-report"),
-    path(
-        "report/call-duration/",
-        views.CallDurationReport.as_view(),
-        name="call-duration-report",
-    ),
-    path(
-        "report/call-referral/",
-        views.CallReferralReport.as_view(),
-        name="call-referral-report",
-    ),
 ]

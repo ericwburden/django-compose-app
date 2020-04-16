@@ -14,11 +14,6 @@ urlpatterns = [
     # Authenticated Pages --------------------------------------------------------------
     path("manage/", views.ManageRequests.as_view(), name="manage"),
     path("referral-id/<int:pk>", views.LinkReferral.as_view(), name="link_referral"),
-    path(
-        "report/request-domain/",
-        views.RequestDomainReport.as_view(),
-        name="request-domain-report",
-    ),
     # Authenticated Redirects ----------------------------------------------------------
     path("update/<int:pk>/<str:status>", views.UpdateRequest.as_view(), name="update"),
     # Utilities ------------------------------------------------------------------------
