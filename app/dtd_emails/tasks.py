@@ -12,13 +12,13 @@ import os
 
 @shared_task
 def test_email(name: str):
-    msg_plain = f'Hey, {name}, here\'s your email!'
+    msg_plain = f"Hey, {name}, here's your email!"
 
     return send_mail(
         "Now is your Test!",
         msg_plain,
         os.getenv("EMAIL_SENDER", default="name@example.org"),
-        ['eric.w.burden@gmail.com']
+        ["eric.w.burden@gmail.com"],
     )
 
 
@@ -57,11 +57,11 @@ def status_update_email(id: int):
             "one of our partner agencies or because we could not connect you for some "
             "reason. Please feel free to reach out to Driving the Dream if you need "
             "additional assistance with this request."
-        )
+        ),
     }[response.status]
 
     closing = ""
-    if not response.status == 'CLOSED':
+    if not response.status == "CLOSED":
         closing += (
             "You can continue to check the status of your request on our web site "
             f"using your phone number ({response.request.primary_phone}) and "
