@@ -20,6 +20,7 @@ def call_type_report_data(request):
         .annotate(date=TruncDate("created_at"))
         .values("call_type", "date")
         .annotate(total_calls=Count("date"))
+        .order_by("date", "call_type")
     )
     for entry in queryset:
         date_string = entry["date"].strftime("%m/%d/%Y")
@@ -55,6 +56,7 @@ def call_duration_report_data(request):
         )
         .values("call_type", "date")
         .annotate(total_duration=Sum("duration"))
+        .order_by("date", "call_type")
     )
     for entry in queryset:
         date_string = entry["date"].strftime("%m/%d/%Y")
@@ -82,8 +84,7 @@ def call_referral_report_data(request):
     call_count = Call.objects.count()
 
     labels = [
-        "Referred" if entry["client_referred"] else "Not Referred" 
-        for entry in queryset
+        "Referred" if entry["client_referred"] else "Not Referred" for entry in queryset
     ]
     percents = [round((entry["n"] / call_count) * 100) for entry in queryset]
 
@@ -91,7 +92,9 @@ def call_referral_report_data(request):
 
 
 def request_domain_report_data(request):
-    queryset = Domain.objects.values("domain").annotate(n=Count("domain"))
+    queryset = (
+        Domain.objects.values("domain").annotate(n=Count("domain")).order_by("-n")[:5]
+    )
 
     def to_label(domain: int):
         return next(i[-1] for i in domains if i[0] == domain)
