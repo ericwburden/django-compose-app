@@ -15,12 +15,12 @@ def call_type_report_data(request):
     labels = []
     incoming_calls = []
     outgoing_calls = []
-    timezone.activate(pytz.timezone("America/Chicago"))
+    tz = pytz.timezone("America/Chicago")
 
     start_date = timezone.now() - timedelta(days=15)
     queryset = (
         Call.objects.filter(created_at__gt=start_date)
-        .annotate(date=TruncDate("created_at"))
+        .annotate(date=TruncDate("created_at", tzinfo=tz))
         .values("call_type", "date")
         .annotate(total_calls=Count("date"))
         .order_by("date", "call_type")
@@ -47,13 +47,13 @@ def call_duration_report_data(request):
     labels = []
     incoming_calls = []
     outgoing_calls = []
-    timezone.activate(pytz.timezone("America/Chicago"))
+    tz = pytz.timezone("America/Chicago")
 
     start_date = timezone.now() - timedelta(days=15)
     queryset = (
         Call.objects.filter(created_at__gt=start_date)
         .annotate(
-            date=TruncDate("created_at"),
+            date=TruncDate("created_at", tzinfo=tz),
             duration=ExpressionWrapper(
                 F("ended_at") - F("started_at"), output_field=DurationField()
             ),
@@ -82,7 +82,6 @@ def call_duration_report_data(request):
 
 
 def call_referral_report_data(request):
-    timezone.activate(pytz.timezone("America/Chicago"))
     queryset = Call.objects.values("client_referred").annotate(
         n=Count("client_referred")
     )
@@ -97,7 +96,6 @@ def call_referral_report_data(request):
 
 
 def request_domain_report_data(request):
-    timezone.activate(pytz.timezone("America/Chicago"))
     queryset = (
         Domain.objects.values("domain").annotate(n=Count("domain")).order_by("-n")[:5]
     )
