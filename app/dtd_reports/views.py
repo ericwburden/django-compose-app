@@ -25,13 +25,19 @@ def call_type_report_data(request):
         .annotate(total_calls=Count("date"))
         .order_by("date", "call_type")
     )
+
     for entry in queryset:
         date_string = entry["date"].strftime("%m/%d/%Y")
         if date_string not in labels:
             labels.append(date_string)
+            if len(labels) > len(incoming_calls) + 1:
+                incoming_calls.append(0)
+            if len(labels) > len(outgoing_calls) + 1:
+                outgoing_calls.append(0)
+
         if entry["call_type"] == "Incoming":
             incoming_calls.append(entry["total_calls"])
-        else:
+        elif entry["call_type"] == "Outgoing":
             outgoing_calls.append(entry["total_calls"])
 
     return JsonResponse(
@@ -65,11 +71,17 @@ def call_duration_report_data(request):
     for entry in queryset:
         date_string = entry["date"].strftime("%m/%d/%Y")
         minutes = round(entry["total_duration"].seconds // 60)
+        
         if date_string not in labels:
             labels.append(date_string)
+            if len(labels) > len(incoming_calls) + 1:
+                incoming_calls.append(0)
+            if len(labels) > len(outgoing_calls) + 1:
+                outgoing_calls.append(0)
+
         if entry["call_type"] == "Incoming":
             incoming_calls.append(minutes)
-        else:
+        elif entry["call_type"] == "Outgoing":
             outgoing_calls.append(minutes)
 
     return JsonResponse(
