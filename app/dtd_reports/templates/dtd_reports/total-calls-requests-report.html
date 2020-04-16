@@ -5,7 +5,7 @@
 <div class="container p-2 bg-light">
   <div class="row">
     <div class="col">
-      <canvas id="call-duration-chart" data-url="{% url 'dtd_reports:call-referral-report-data' %}"></canvas>
+      <canvas id="total-calls-requests-chart" data-url="{% url 'dtd_reports:total-calls-requests-report-data' %}"></canvas>
     </div>
   </div>
 </div>
@@ -14,17 +14,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 <script>
   $(function() {
-    $("#call-referral-report").addClass("active");
+    $("#total-calls-requests-report").addClass("active");
   });
 
   $(function () {
 
-    var $callDurationChart = $("#call-duration-chart");
+    var $totalCallsRequestsChart = $("#total-calls-requests-chart");
     $.ajax({
-      url: $callDurationChart.data("url"),
+      url: $totalCallsRequestsChart.data("url"),
       success: function (data) {
 
-        var ctx = $callDurationChart[0].getContext("2d");
+        var ctx = $totalCallsRequestsChart[0].getContext("2d");
 
         Chart.scaleService.updateScaleDefaults('linear', {
             ticks: {
@@ -39,9 +39,9 @@
             labels: data.labels,
             datasets: [
               {
-                label: '% of Calls',
-                backgroundColor: ['darkturquoise', 'lightgreen'],
-                data: data.percents
+                label: '# of Intakes',
+                backgroundColor: ['lightsalmon', 'palevioletred'],
+                data: data.counts
               }
             ]          
           },
@@ -52,21 +52,10 @@
             },
             title: {
               display: true,
-              text: 'Percentage of Calls Referred'
-            },
-            tooltips: {
-              callbacks: {
-                label: (item, data) => {
-                  var i = item.index;                 
-                  return  data.labels[i] + ': ' + data.datasets[0].data[i] + '%';
-                }
-              }
+              text: 'Incoming Calls vs Online Requests'
             },
             plugins: {
               datalabels: {
-                formatter: (value, ctx) => {
-                  return value + "%";
-                },
                 color: '#ffffff',
                 font: {
                   size: 18,
