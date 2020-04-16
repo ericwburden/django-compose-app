@@ -11,6 +11,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 <script>
   $(function() {
     $("#call-duration-per-day-report").addClass("active");
@@ -32,6 +33,7 @@
         });
 
         new Chart(ctx, {
+          plugins: [ChartDataLabels],
           type: 'bar',
           data: {
             labels: data.labels,
@@ -60,6 +62,15 @@
             tooltips: {
               callbacks: {
                 label: (item) => item.yLabel + " minutes"
+              }
+            },
+            plugins: {
+              datalabels: {
+                color: '#ffffff',
+                font: {
+                  size: 18,
+                  weight: 'bold'
+                }
               }
             }
           }
