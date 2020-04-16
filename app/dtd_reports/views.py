@@ -1,3 +1,5 @@
+import pytz
+
 from dtd_calls.models import Call
 from dtd_request.models import Domain, domains
 from datetime import timedelta
@@ -13,6 +15,7 @@ def call_type_report_data(request):
     labels = []
     incoming_calls = []
     outgoing_calls = []
+    timezone.activate(pytz.timezone("America/Chicago"))
 
     start_date = timezone.now() - timedelta(days=15)
     queryset = (
@@ -44,6 +47,7 @@ def call_duration_report_data(request):
     labels = []
     incoming_calls = []
     outgoing_calls = []
+    timezone.activate(pytz.timezone("America/Chicago"))
 
     start_date = timezone.now() - timedelta(days=15)
     queryset = (
@@ -78,6 +82,7 @@ def call_duration_report_data(request):
 
 
 def call_referral_report_data(request):
+    timezone.activate(pytz.timezone("America/Chicago"))
     queryset = Call.objects.values("client_referred").annotate(
         n=Count("client_referred")
     )
@@ -92,6 +97,7 @@ def call_referral_report_data(request):
 
 
 def request_domain_report_data(request):
+    timezone.activate(pytz.timezone("America/Chicago"))
     queryset = (
         Domain.objects.values("domain").annotate(n=Count("domain")).order_by("-n")[:5]
     )
