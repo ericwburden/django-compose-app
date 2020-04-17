@@ -1,5 +1,21 @@
 from django import forms
-from .models import Call
+from .models import Call, Domain
+
+
+class DomainForm(forms.ModelForm):
+    class Meta:
+        model = Domain
+        fields = [
+            "domain",
+        ]
+        widgets = {
+            "domain": forms.Select(attrs={"class": "form-control", "required": True})
+        }
+
+
+CallDomainFormset = forms.models.inlineformset_factory(
+    Call, Domain, form=DomainForm, extra=1, can_delete=False
+)
 
 
 class CallForm(forms.ModelForm):
@@ -8,12 +24,21 @@ class CallForm(forms.ModelForm):
         fields = [
             "started_at",
             "ended_at",
-            "caller_number",
-            "caller_zip",
             "call_type",
+            "caller_number",
+            "caller_email",
+            "caller_name",
+            "caller_address",
+            "caller_city",
+            "caller_state",
+            "caller_zip",
+            "caller_age",
+            "caller_gender",
+            "caller_household_size",
             "covid_related",
             "client_referred",
             "referral_id",
+            "referred_agency",
             "notes",
         ]
 

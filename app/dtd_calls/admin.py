@@ -1,7 +1,7 @@
 import pytz
 from django.contrib import admin
 from django.utils import timezone
-from .models import Call
+from .models import Call, Agency
 
 
 class CallAdmin(admin.ModelAdmin):
@@ -9,4 +9,9 @@ class CallAdmin(admin.ModelAdmin):
     list_display = ("created_at", "caller_number", "caller_zip", "duration")
 
 
+class AgencyAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
 admin.site.register(Call, CallAdmin)
+admin.site.register(Agency, AgencyAdmin)

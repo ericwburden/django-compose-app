@@ -1,7 +1,7 @@
 import logging
 
-from .forms import CallForm, UpdateCallForm
-from .models import Call
+from .forms import CallForm, UpdateCallForm, CallDomainFormset
+from .models import Call, Agency
 
 from datetime import timedelta
 
@@ -25,12 +25,28 @@ class CallCreateView(LoginRequiredMixin, CreateView):
     template_name = "dtd_calls/create_call.html"
     form_class = CallForm
 
+    def get_context_data(self, **kwargs):
+        data = super(CallCreateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["domains"] = CallDomainFormset(self.request.POST)
+        else:
+            data["domains"] = CallDomainFormset()
+        return data
+
     def form_valid(self, form):
-        logging.error("Checking Validation")
+        context = self.get_context_data()
+        domains = context["domains"]
+        other_agency = self.request.POST["other-agency"]
         with transaction.atomic():
             self.object = form.save(commit=False)
-            self.object.operator = self.request.user
+            if other_agency:
+                new_agency = Agency(name=other_agency)
+                new_agency.save()
+                self.object.referred_agency = new_agency
             self.object.save()
+            if domains.is_valid():
+                domains.instance = self.object
+                domains.save()
         return HttpResponseRedirect(
             reverse_lazy("dtd_calls:call_detail", kwargs={"pk": self.object.id})
         )
