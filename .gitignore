@@ -27,6 +27,7 @@ app/*/migrations/*.py
 !app/dtd_calls/migrations/0002_phone_regex.py
 !app/dtd_calls/migrations/0003_call_call_type.py
 !app/dtd_calls/migrations/0004_call_demographics_update.py
+!app/dtd_calls/migrations/0005_call_update_status.py
 
 # Static Files #
 app/staticfiles/*

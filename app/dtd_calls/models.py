@@ -59,6 +59,7 @@ class Call(models.Model):
     referral_id = models.IntegerField(verbose_name="Referral ID", blank=True, null=True)
     referred_agency = models.ForeignKey(Agency, on_delete=models.SET_NULL, blank=True, null=True)
     notes = models.TextField(verbose_name="Notes", blank=True, null=True)
+    followup_notes  = models.TextField(verbose_name="Followup Notes", blank=True, null=True)
     operator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
@@ -66,19 +67,57 @@ class Call(models.Model):
         on_delete=models.SET_NULL,
         related_name="call_operator",
     )
+    assigned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="call_assigned_to",
+    )
 
     def duration(self):
         diff = self.ended_at - self.started_at
         minutes = divmod(diff.seconds, 60)
         return f"{minutes[0]} minutes, {minutes[1]} seconds"
 
+    def status(self):
+        return Call.objects.get(pk=self.id).statuses.latest('id')
+
 
 class Domain(models.Model):
-    call = models.ForeignKey(Call, on_delete=models.CASCADE)
+    call = models.ForeignKey(Call, related_name="domains", on_delete=models.CASCADE)
     domain = models.IntegerField(choices=domains, verbose_name="Service Domain(s)")
 
     def __str__(self):
         return next(i[-1] for i in domains if i[0] == self.domain)
+
+    def label(self):
+        return self.__str__()
+
+
+class CallStatus(models.Model):
+    class Meta:
+        ordering = ["-created_at"]
+        
+    CONTACTED = "Contacted"
+    REFERRED = "Referred"
+    INFO = "Shared Information"
+    CLOSED = "Closed"
+    statuses = ((1, CONTACTED), (2, REFERRED), (3, INFO), (4, CLOSED))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    call = models.ForeignKey(Call, related_name="statuses", on_delete=models.CASCADE)
+    status = models.IntegerField(choices = statuses, verbose_name="Call Status")
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="status_updated_by",
+    )
+
+    def __str__(self):
+        return next(i[-1] for i in self.statuses if i[0] == self.status)
 
     def label(self):
         return self.__str__()

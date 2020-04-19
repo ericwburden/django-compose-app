@@ -8,21 +8,59 @@
 
 <div class="container p-2 bg-light">
   <div class="row py-2">
-    <div class="col-12">
-      <ul>
-        <li><b>Record Created: </b>{{ call.created_at }}</li>
-        <li><b>Last Updated: </b>{{ call.updated_at }}</li>
-        <li><b>Call Started: </b>{{ call.started_at }}</li>
-        <li><b>Call Ended: </b>{{ call.ended_at }}</li>
-        <li><b>Call From: </b>{{ call.caller_number }}</li>
-        <li><b>Caller Zip: </b>{{ call.caller_zip }}</li>
-        <li><b>Type of Call: </b>{{ call.call_type }}</li>
-        <li><b>Related to Covid-19? </b>{{ call.covid_related }}</li>
-        <li><b>Was caller referred? </b>{{ call.client_referred }}</li>
-        <li><b>Referral ID: </b>{{ call.referral_id }}</li>
-        <li><b>Notes: </b>{{ call.notes }}</li>
-        <li><b>Call Taken By: </b>{{ call.operator }}</li>
-      </ul>
+    <div class="col-sm-4">
+      <dl>
+        <dt><h5>Timestamps</h5></dt>
+          <dd> - <b>Record Created: </b>{{ call.created_at }}</dd>
+          <dd> - <b>Last Updated: </b>{{ call.updated_at }}</dd>
+          <dd> - <b>Call Started: </b>{{ call.started_at }}</dd>
+          <dd> - <b>Call Ended: </b>{{ call.ended_at }}</dd>
+          <dd> - <b>Last Status: </b>{{ call.status.created_at }}</dd>
+
+        <hr>
+
+        <dt><h5>Caller Information</h5></dt>
+          <dd> - <b>Name: </b>{{ call.caller_name }}</dd>
+          <dd> - <b>Phone Number: </b>{{ call.caller_number }}</dd>
+          <dd> - <b>Email Address: </b>{{ call.caller_email }}</dd>
+          <dd> - <b>Address: </b>{{ call.caller_address }}</dd>
+          <dd> - <b>City/State/Zip: </b>{{ call.caller_city }}/{{ call.caller_state }}/{{ call.caller_zip }}</dd>
+          <dd> - <b>Age: </b>{{ call.caller_age }}</dd>
+          <dd> - <b>Gender: </b>{{ call.caller_gender }}</dd>
+          <dd> - <b>Household Size: </b>{{ call.caller_household_size }}</dd>
+      </dl>
+    </div>
+    <div class="col-sm-4">
+      <dd>
+        <dt><h5>Call Information</h5></dt>
+          <dd> - <b>Type: </b>{{ call.call_type }}</dd>
+          <dd> - <b>COVID Related?: </b>{{ call.covid_related }}</dd>
+          <dd> - <b>Client Referred?: </b>{{ call.client_referred }}</dd>
+          <dd> - <b>Referral ID: </b>{{ call.referral_id }}</dd>
+          <dd> - <b>Referred Agency: </b>{{ call.referred_agency }}</dd>
+          <dd> - <b>Recorded By: </b>{{ call.operator }}</dd>
+          <dd> - <b>Status: </b>{{ call.status }}</dd>
+          <dd> - <b>Updated By: </b>{{ call.status.updated_by }}</dd>
+          <dd> - <b>Assigned To:</b>{{ call.assigned_to }}</dd>
+
+        <hr>
+
+        <dt><h5>Domains</h5></dt>
+          {% for domain in call.domains.all %}
+          <dd> - {{ domain }}</dd>
+          {% endfor %}
+      </dd>
+    </div>
+    <div class="col-sm-4">
+      <dd>
+        <dt><h5>Call Notes</h5></dt>
+          <dd>{{ call.notes }}</dd>
+
+        <hr>
+
+        <dt><h5>Followup Notes</h5></dt>
+          <dd>{{ call.followup_notes }}</dd>
+      </dd>
     </div>
   </div>
   <div class="row">

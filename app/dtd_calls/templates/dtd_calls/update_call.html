@@ -7,7 +7,7 @@
 {% block content %}
 
 <div class="container p-2 bg-light">
-  <form action="{% url 'dtd_calls:call_create' %}" method="post">
+  <form action="{% url 'dtd_calls:call_update' call.id %}" method="post">
     {% csrf_token %}
 
     
@@ -18,53 +18,7 @@
       </div>
     </div>
 
-    <!--Row 1, Set Call Start and End-->
-    <div class="row py-2">
-      <div class="col-6">
-        <div class="form-group">
-          {{ form.started_at.label_tag }}
-          <div class="input-group">
-            <input 
-              type="text"
-              name="{{ form.started_at.name }}"
-              id="{{ form.started_at.id_for_label }}"
-              class="form-control"
-              placeholder="{{ form.started_at.help_text|safe }}"
-              readonly
-              required>
-              <div class="input-group-append">
-                <button class="btn btn-success" type="button" id="setStart">Set</button>
-              </div>
-          </div>
-          <div class="text-danger">
-            {{ form.started_at.errors }}
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          {{ form.ended_at.label_tag }}
-          <div class="input-group">
-            <input 
-              type="text"
-              name="{{ form.ended_at.name }}"
-              id="{{ form.ended_at.id_for_label }}"
-              class="form-control"
-              placeholder="{{ form.ended_at.help_text|safe }}"
-              readonly
-              required>
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="setEnd" disabled>Set</button>
-              </div>
-          </div>
-          <div class="text-danger">
-            {{ form.ended_at.errors }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--Row 2, Caller Number, Caller Email Address-->
+    <!--Row 1, Caller Number, Caller Email Address-->
     <div class="row py-2">
       <div class="col-sm-6">
         <div class="form-group">
@@ -88,7 +42,7 @@
       </div>
     </div>
 
-    <!--Row 3, Caller Name, Address-->
+    <!--Row 2, Caller Name, Address-->
     <div class="row py-2">
       <div class="col-sm-4">
         <div class="form-group">
@@ -112,7 +66,7 @@
       </div>
     </div>
 
-    <!--Row 4, Caller City, State, Zip-->
+    <!--Row 3, Caller City, State, Zip-->
     <div class="row py-2">
       <div class="col-sm-6">
         <div class="form-group">
@@ -146,7 +100,7 @@
       </div>
     </div>
 
-    <!--Row 5, Caller Age, Gender, Household Size-->
+    <!--Row 4, Caller Age, Gender, Household Size-->
     <div class="row py-2">
       <div class="col-sm-4">
         <div class="form-group">
@@ -177,11 +131,22 @@
       </div>
     </div>
 
-    <!--Row 6, 3 Columns-->
+    <!--Row 5, 3 Columns-->
     <div class="row py-2">
 
+      <!-- Call Notes -->
+      <div class="col-sm-4">
+        <div class="form-group">
+          {{ form.notes.label_tag }}
+          {{ form.notes }}
+          <div class="text-danger">
+            {{ form.notes.errors }}
+          </div>
+        </div>
+      </div>
+
       <!--Col1, Call Type, Covid-Related, Client Referred, Referral ID, Referral Agency-->
-      <div class="col-sm-3">
+      <div class="col-sm-4">
         <div class="form-group">
           {{ form.call_type.label_tag }}
           {{ form.call_type }}
@@ -233,15 +198,15 @@
             hidden>
         </div>
       </div>
-      
-      <!--Call Domains -->
+
+      <!-- Update Notes -->
       <div class="col-sm-4">
-        {{ domains.management_form }}
-        {% for form in domains.forms %}
+        {{ status.management_form }}
+        {% for form in status.forms %}
           {% if forloop.first %}
             <div class="row">
               <div class="col-12 pb-2">
-                Service domains:
+                Current Status:
               </div>
             </div>
           {% endif %}
@@ -251,25 +216,32 @@
               <div class="col-12">
                 <div class="input-group mb-3">
                   {{ field }}
-                  <div class="input-group-append">
-                    <button class="btn btn-success add-form-row" type="button">
-                      <img src="{% static 'dtd_request/icons/svg/plus-white.svg' %}" class="img-fluid" style="width:1rem;height:1rem;" alt="Add">
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
           {% endfor %}
         {% endfor %}
-      </div>
 
-      <!-- Call Notes -->
-      <div class="col-sm-5">
         <div class="form-group">
-          {{ form.notes.label_tag }}
-          {{ form.notes }}
+          <div class="form-group">
+            <label for="lastUpdatedBy">Last Updated By</label>
+            <input type="text" class="form-control" id="lastUpdatedBy" readonly value="{{ call.status.updated_by }}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          {{ form.assigned_to.label_tag }}
+          {{ form.assigned_to }}
           <div class="text-danger">
-            {{ form.notes.errors }}
+            {{ form.assigned_to.errors }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          {{ form.followup_notes.label_tag }}
+          {{ form.followup_notes }}
+          <div class="text-danger">
+            {{ form.followup_notes.errors }}
           </div>
         </div>
       </div>
@@ -277,108 +249,11 @@
 
     <div class="row d-flex justify-content-center">
       <div class="col-4 text-center">
-        <input type="submit" value="Submit Call Information" class="btn btn-outline-secondary" id="submitBtn" disabled>
+        <input type="submit" value="Update Call Information" class="btn btn-primary" id="submitBtn">
       </div>
     </div>
   </form>
 </div>
-
-<!--Script for Setting Call Start/Stop fields-->
-<script>
-  $(function() {
-    $("#new-call").addClass("active");
-  });
-
-  $("#setStart").click(function(){
-    var date_string = moment().format().replace("T", " ").substring(0,19);
-    $("#{{ form.started_at.id_for_label }}").val(date_string);
-    $("#setStart").prop('disabled', true)
-      .removeClass('btn-success')
-      .addClass('btn-outline-secondary');
-    $("#setEnd").prop('disabled', false)
-      .removeClass('btn-outline-secondary')
-      .addClass('btn-success');
-  });
-
-  $("#setEnd").click(function(){
-    var date_string = moment().format().replace("T", " ").substring(0,19);
-    $("#{{ form.ended_at.id_for_label }}").val(date_string);
-    $("#setEnd").prop('disabled', true)
-      .removeClass('btn-success')
-      .addClass('btn-outline-secondary');
-    $("#submitBtn").prop('disabled', false)
-      .removeClass('btn-outline-secondary')
-      .addClass('btn-primary');
-  });
-</script>
-
-<!-- Script for adding/removing domain selectors-->
-<script>
-  function updateElementIndex(el, prefix, ndx) {
-    var id_regex = new RegExp('(' + prefix + '-\\d+)');
-    var replacement = prefix + '-' + ndx;
-    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
-    if (el.id) el.id = el.id.replace(id_regex, replacement);
-    if (el.name) el.name = el.name.replace(id_regex, replacement);
-  }
-
-  function cloneMore(selector, prefix) {
-    var newElement = $(selector).clone(true);
-    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
-    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
-        var name = $(this).attr('name').replace('-' + (total-1) + '-', '-' + total + '-');
-        var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-    });
-    newElement.find('label').each(function() {
-        var forValue = $(this).attr('for');
-        if (forValue) {
-          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
-          $(this).attr({'for': forValue});
-        }
-    });
-    total++;
-    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
-    $(selector).after(newElement);
-
-    var conditionRow = $('.form-row:not(:last)');
-    conditionRow.find('.btn.add-form-row')
-    .removeClass('btn-success').addClass('btn-danger')
-    .removeClass('add-form-row').addClass('remove-form-row')
-    .html('<span aria-hidden="true"></span>')
-    .find('span')
-    .html('<img class="img-fluid" style="width:1rem;height:1rem;" alt="Remove">')
-    .find('img').attr('src', "{% static 'dtd_request/icons/svg/minus-white.svg' %}");
-    return false;
-  }
-
-  function deleteForm(prefix, btn) {
-    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-    if (total > 1){
-        btn.closest('.form-row').remove();
-        var forms = $('.form-row');
-        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-        for (var i=0, formCount=forms.length; i<formCount; i++) {
-            $(forms.get(i)).find(':input').each(function() {
-                updateElementIndex(this, prefix, i);
-            });
-        }
-    }
-    return false;
-  }
-
-  $(document).on('click', '.add-form-row', function(e){
-    e.preventDefault();
-    cloneMore('.form-row:last', 'domains');
-    return false;
-  });
-  $(document).on('click', '.remove-form-row', function(e){
-    e.preventDefault();
-    deleteForm('domains', $(this));
-    console.log('Clicked it!')
-    return false;
-  });
-</script>
 
 <!-- Script for 'Other' Agency Option -->
 <script>
@@ -406,6 +281,14 @@
       $("#otherAgency").removeAttr('required').attr('hidden', true).val("");
     }
   });
+</script>
+
+<!-- Set Defaults for some Form Fields -->
+<script>
+  $(function() {
+    $("#{{ form.notes.auto_id }}").prop('readonly', true);
+    $(".call-status").val("{{ call.status.status }}")
+  })
 </script>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 import logging
 
-from .forms import CallForm, UpdateCallForm, CallDomainFormset
-from .models import Call, Agency
+from .forms import CallForm, UpdateCallForm, CallDomainFormset, CallStatusFormset
+from .models import Call, Agency, CallStatus
 
 from datetime import timedelta
 
@@ -39,6 +39,7 @@ class CallCreateView(LoginRequiredMixin, CreateView):
         other_agency = self.request.POST["other-agency"]
         with transaction.atomic():
             self.object = form.save(commit=False)
+            self.object.operator = self.request.user
             if other_agency:
                 new_agency = Agency(name=other_agency)
                 new_agency.save()
@@ -47,6 +48,7 @@ class CallCreateView(LoginRequiredMixin, CreateView):
             if domains.is_valid():
                 domains.instance = self.object
                 domains.save()
+            CallStatus(call=self.object, status=1, updated_by=self.request.user).save()
         return HttpResponseRedirect(
             reverse_lazy("dtd_calls:call_detail", kwargs={"pk": self.object.id})
         )
@@ -55,9 +57,38 @@ class CallCreateView(LoginRequiredMixin, CreateView):
 class CallUpdateView(LoginRequiredMixin, UpdateView):
     login_url = "/login/"
     model = Call
-    template_name = "dtd_calls/update-call.html"
+    template_name = "dtd_calls/update_call.html"
     form_class = UpdateCallForm
     success_url = reverse_lazy("dtd_calls:call_list")
+
+    def get_context_data(self, **kwargs):
+        data = super(CallUpdateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["status"] = CallStatusFormset(self.request.POST)
+        else:
+            data["status"] = CallStatusFormset()
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        status_form = context["status"]
+        other_agency = self.request.POST["other-agency"]
+        with transaction.atomic():
+            self.object = form.save(commit=False)
+            if other_agency:
+                new_agency = Agency(name=other_agency)
+                new_agency.save()
+                self.object.referred_agency = new_agency
+            self.object.save()
+            if status_form.is_valid():
+                status_form.instance = self.object
+                print(status_form.cleaned_data)
+                status = status_form.cleaned_data[0]["status"]
+                new_status = CallStatus(call=self.object, status=status, updated_by=self.request.user)
+                new_status.save()
+        return HttpResponseRedirect(
+            reverse_lazy("dtd_calls:call_detail", kwargs={"pk": self.object.id})
+        )
 
 
 class CallDetailView(LoginRequiredMixin, DetailView):

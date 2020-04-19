@@ -1,5 +1,5 @@
 from django import forms
-from .models import Call, Domain
+from .models import Call, Domain, CallStatus
 
 
 class DomainForm(forms.ModelForm):
@@ -48,17 +48,41 @@ class CallForm(forms.ModelForm):
             visible.field.widget.attrs["class"] = "form-control"
 
 
+class CallStatusForm(forms.ModelForm):
+    class Meta:
+        model = CallStatus
+        fields = [
+            "status",
+        ]
+        widgets = {
+            "status": forms.Select(attrs={"class": "form-control call-status", "required": True})
+        }
+
+
+CallStatusFormset = forms.models.inlineformset_factory(Call, CallStatus, form=CallStatusForm, extra=1, can_delete=False)
+
+
 class UpdateCallForm(forms.ModelForm):
     class Meta:
         model = Call
         fields = [
             "caller_number",
+            "caller_email",
+            "caller_name",
+            "caller_address",
+            "caller_city",
+            "caller_state",
             "caller_zip",
-            "call_type",
+            "caller_age",
+            "caller_gender",
+            "caller_household_size",
             "covid_related",
             "client_referred",
             "referral_id",
+            "referred_agency",
             "notes",
+            "followup_notes",
+            "assigned_to"
         ]
 
     def __init__(self, *args, **kwargs):
