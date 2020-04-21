@@ -1,4 +1,5 @@
 field,message,default,command
+APP_TITLE, Base Title for your application, Django-Compose App,
 TRAEFIK_USER_PASS,Generate with `htpasswd -nb username password_text`,changeme:$apr1$sluWH7xF$OcNdfNXfLYA0rQOOnaoyy1,
 ACME_EMAIL,Email address for the SSL certificate contact, leave blank if not using HTTPS,changeme@email.org,
 SERVER_HOSTNAME,The name of the host server: `localhost` if developing locally,localhost,

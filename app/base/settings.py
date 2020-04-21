@@ -33,11 +33,6 @@ ALLOWED_HOSTS = os.getenv("SERVER_HOSTNAME", "localhost").split(" ")
 # Application definition
 
 INSTALLED_APPS = [
-    "dtd_request.apps.DtdRequestConfig",
-    "dtd_calls.apps.DtdCallsConfig",
-    "dtd_reports.apps.DtdReportsConfig",
-    "dtd_emails.apps.DtdEmailsConfig",
-    "questgiver.apps.QuestgiverConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -69,6 +64,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "base.context_processors.environ",
             ],
         },
     },
