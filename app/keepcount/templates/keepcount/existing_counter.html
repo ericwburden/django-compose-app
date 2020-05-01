@@ -114,7 +114,9 @@
               <span class="lead" style="font-size:3rem;">Max: {{ counter.max_value }}</span>
             </div>
             <div class="col-6 text-right">
-              <span class="lead" style="font-size:3rem;">Total: {{ counter.total }}</span>
+              <span class="lead" style="font-size:3rem;">
+                Total: <span id="total_value">{{ counter.total }}</span>
+              </span>
             </div>
           </div>
           <div class="row">
@@ -158,6 +160,7 @@
       url: "{% url 'existing_counter_json' counter.counter_name %}",
       success: (data) => {
         $("#counter_value").text(data.value);
+        $("#total_value").text(data.total);
         updateText();
       },
       complete: (data) => {
@@ -175,12 +178,14 @@
     $.get("{% url 'add_to_counter' counter.counter_name %}", () => {
       updateCounterValue();
     });
+    $(this).unbind("mouseenter mouseleave");
   })
 
   $("#subtracter").click(() => {
     $.get("{% url 'subtract_from_counter' counter.counter_name %}", () => {
       updateCounterValue();
     });
+    $(this).unbind("mouseenter mouseleave");
   })
 
 </script>
