@@ -1,6 +1,7 @@
 from .models import Counter
 from django import forms
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 
 
 class NewCounterForm(forms.ModelForm):
@@ -22,6 +23,6 @@ class CounterNameSearch(forms.Form):
 
     def clean(self):
         cleaned_data = super(CounterNameSearch, self).clean()
-        counter = Counter.objects.get(counter_name=cleaned_data["counter_name"])
+        counter = get_object_or_404(Counter, counter_name=cleaned_data["counter_name"])
         if not counter:
             raise ValidationError("No counter with that name exists.")
