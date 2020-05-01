@@ -4,3 +4,4 @@ psycopg2==2.8.4
 uuid==1.30
 celery==4.4.0
 redis==3.4.1
+django-allauth==0.41.0
