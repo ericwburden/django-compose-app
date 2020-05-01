@@ -41,7 +41,7 @@
   }
 
   #value_wrap {
-    height: 400px;
+    height: 300px;
     font-family: monospace;
   }
 </style>
@@ -70,9 +70,9 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-6 my-2" id="adder">
+            <div class="col-6 my-2" id="adder">
             </div>
-            <div class="col-sm-6 my-2" id="subtracter">
+            <div class="col-6 my-2" id="subtracter">
             </div>
           </div>
         </div>
@@ -94,13 +94,13 @@
         offset = colWidth/8;
         break;
       case 2:
-        offset = colWidth/4;
+        offset = colWidth/3;
         break;
       case 3:
-        offset = colWidth/2;
+        offset = colWidth/1.5;
         break;
       default:
-        offset = colWidth/8;
+        offset = colWidth/1.1;
     }
 
     var fontSize = (colWidth - offset) + "px";
