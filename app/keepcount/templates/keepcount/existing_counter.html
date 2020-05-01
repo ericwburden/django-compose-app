@@ -22,7 +22,7 @@
     height: 20vh;
   }
 
-  #adder:hover, #subtracter:hover {
+  div.no-touch:hover {
     filter: saturate(80%) brightness(75%) contrast(97%);
   }
 
@@ -120,9 +120,9 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-6 my-2" id="adder">
+            <div class="col-6 my-2 no-touch" id="adder">
             </div>
-            <div class="col-6 my-2" id="subtracter">
+            <div class="col-6 my-2 no-touch" id="subtracter">
             </div>
           </div>
         </div>
@@ -169,6 +169,11 @@
     });
   }
 
+  // Remove hover classes from buttons on a touchscreen
+  window.addEventListener('touchstart', function() {
+    $(".no-touch").removeClass("no-touch");
+  });
+
   $(() => {
     updateText();
     setTimeout(updateCounterValue, 2000);
@@ -178,14 +183,12 @@
     $.get("{% url 'add_to_counter' counter.counter_name %}", () => {
       updateCounterValue();
     });
-    $(this).unbind("mouseenter mouseleave");
   })
 
   $("#subtracter").click(() => {
     $.get("{% url 'subtract_from_counter' counter.counter_name %}", () => {
       updateCounterValue();
     });
-    $(this).unbind("mouseenter mouseleave");
   })
 
 </script>
