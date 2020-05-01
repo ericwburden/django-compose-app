@@ -172,11 +172,15 @@
   })
 
   $("#adder").click(() => {
-    window.location.href = "{% url 'add_to_counter' counter.counter_name %}";
+    $.get("{% url 'add_to_counter' counter.counter_name %}", () => {
+      updateCounterValue();
+    });
   })
 
   $("#subtracter").click(() => {
-    window.location.href = "{% url 'subtract_from_counter' counter.counter_name %}";
+    $.get("{% url 'subtract_from_counter' counter.counter_name %}", () => {
+      updateCounterValue();
+    });
   })
 
 </script>
