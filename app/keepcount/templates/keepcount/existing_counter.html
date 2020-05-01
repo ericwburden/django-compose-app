@@ -50,11 +50,15 @@
   <div class="col-lg-6 col-md-8 col-sm-12" id="main-col">
     <div class="card bg-light mb-3">
       <div class="card-header">
-        <h3>{{ counter.counter_name }}</h3>
-        <div class="float-right">
-          <a href="{% url 'home' %}" class="btn btn-outline ">
-            <img src="{% static 'keepcount/icon/home.svg' %}" alt="Home" class="img-fluid">
-          </a>
+        <div class="row">
+          <div class="col-9">
+            <h3>{{ counter.counter_name }}</h3>
+          </div>
+          <div class="col-3 d-flex justify-content-end">
+            <a href="{% url 'home' %}" class="btn btn-outline ">
+              <img src="{% static 'keepcount/icon/home.svg' %}" alt="Home" class="img-fluid" style="width:1.5em;height:1.3rem;">
+            </a>
+          </div>
         </div>
       </div>
       <div class="card-body">
