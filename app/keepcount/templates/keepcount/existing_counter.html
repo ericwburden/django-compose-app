@@ -40,23 +40,59 @@
     padding: 0px;
   }
 
-  #value_wrap {
-    height: 300px;
-    font-family: monospace;
+  .counter_svg {
+    width: 100%;
+    font-family: "Lucida Console", Monaco, monospace;
+    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
   }
 </style>
+
+<!-- Modal -->
+<div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Share this Counter</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="qr_code" class="d-flex justify-content-center"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="row d-flex justify-content-center">
   <div class="col-lg-6 col-md-8 col-sm-12" id="main-col">
     <div class="card bg-light mb-3">
       <div class="card-header">
         <div class="row">
-          <div class="col-9">
-            <h3>{{ counter.counter_name }}</h3>
+          <div class="col-8">
+            <h2>{{ counter.counter_name }}</h2>
           </div>
-          <div class="col-3 d-flex justify-content-end">
-            <a href="{% url 'home' %}" class="btn btn-outline pr-0">
-              <img src="{% static 'keepcount/icon/home.svg' %}" alt="Home" class="img-fluid" style="width:1.5em;height:1.3rem;">
+          <div class="col-4 d-flex justify-content-end">
+            <a 
+              href="#" 
+              class="btn btn-outline px-1 py-0 mr-2" 
+              data-toggle="modal" 
+              data-target="#qrModal"
+              id="qr_link">
+              <img 
+                src="{% static 'keepcount/icon/qr.svg' %}" 
+                alt="Home" 
+                class="img-fluid" 
+                style="width:3rem;height:3rem;" 
+                id="qr_btn">
+            </a>
+            <a href="{% url 'home' %}" class="btn btn-outline px-1 py-0">
+              <img 
+                src="{% static 'keepcount/icon/home.svg' %}" 
+                alt="Home" 
+                class="img-fluid" 
+                style="width:3rem;height:3rem;" 
+                id="home_btn">
             </a>
           </div>
         </div>
@@ -64,8 +100,16 @@
       <div class="card-body">
         <div class="container">
           <div class="row mb-2" id="value_wrap">
-            <div class="col text-center">
-              <span class="display-1" style="line-height:1;" id="counter_value">{{ counter.value }}</span>
+            <div class="col text-center px-0">
+              <svg viewBox="0 0 28 28" class="counter_svg">
+                <text 
+                  x="50%" y="50%" 
+                  text-anchor="middle" 
+                  dominant-baseline="middle" 
+                  id="counter_value">
+                    {{ counter.value }}
+                </text>
+              </svg>
             </div>
           </div>
           <div class="row">
@@ -85,37 +129,18 @@
   </div>
 </div>
 
-<!-- Script to handle text resizing -->
+<!-- Script to handle text coloring -->
 <script>
   function updateText() {
-    var colWidth = $("#main-col").width();
     var value = +($("#counter_value").text());
     var max_value = +("{{ counter.max_value }}");
-    var digits = $("#counter_value").text().length;
-
-    switch(digits) {
-      case 1:
-        offset = colWidth/8;
-        break;
-      case 2:
-        offset = colWidth/3;
-        break;
-      case 3:
-        offset = colWidth/1.5;
-        break;
-      default:
-        offset = colWidth/1.1;
-    }
-
-    var fontSize = (colWidth - offset) + "px";
-    $("#counter_value").css({'font-size': fontSize})
-      .removeClass('text-danger')
-      .removeClass('text-warning');
+    
+    $("#counter_value").removeAttr('fill');
 
     if (value > max_value) {
-      $("#counter_value").addClass('text-danger');
+      $("#counter_value").attr('fill', '#f03800');
     } else if (value > .9*max_value) {
-      $("#counter_value").addClass('text-warning');
+      $("#counter_value").attr('fill', '#e9f000');
     }
   }
 
@@ -154,5 +179,14 @@
     window.location.href = "{% url 'subtract_from_counter' counter.counter_name %}";
   })
 
+</script>
+
+<!-- Script to display QR code in modal -->
+<script src="{% static 'keepcount/js/qrcode.min.js' %}" type="text/javascript"></script>
+<script>
+  $("#qr_link").click(() => {
+    absoluteURL = new URL("{% url 'existing_counter' counter.counter_name %}", document.baseURI).href;
+    new QRCode(document.getElementById("qr_code"), absoluteURL);
+  })
 </script>
 {% endblock %}
