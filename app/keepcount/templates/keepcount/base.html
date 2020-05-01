@@ -27,15 +27,40 @@
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-5888194859089723" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
+  <!-- Title Link Style -->
+  <style>
+    #title {
+      display: inline-block;
+      line-height:0.9;
+    }
+
+    #title > a > span:nth-child(1) {
+      border-bottom: 2px solid #7dffab;
+      display:inline-block;
+    }
+
+    #title > a > span:nth-child(2) {
+      border-bottom: 2px solid #ff8c7d;
+      display:inline-block;
+    }
+
+    #title > a:hover > span {
+      border-bottom: 2px solid white;
+    }
+  </style>
+
   <title>{% block title %}{{ APP_TITLE }}{% endblock %}</title>
 </head>
+
 
 <body class="bg-dark">
   <div class="container mt-5">
     <div class="row d-flex justify-content-center mb-3">
       <div class="col-lg-6 col-md-8 col-sm-12">
-        <h1 class="text-white text-center d-flex justify-content-center" style="display:inline-block;line-height:0.9;">
-          <span style="border-bottom:2px solid #7dffab;display:inline-block;">Keep</span><span style="border-bottom:2px solid #ff8c7d;display:inline-block;">Count</span>
+        <h1 id="title" class="text-white text-center d-flex justify-content-center" >
+          <a href="{% url 'home' %}" class="text-white">
+            <span>Keep</span><span>Count</span>
+          </a>
         </h1>
       </div>
     </div>

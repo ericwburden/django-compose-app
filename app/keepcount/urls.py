@@ -16,13 +16,21 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
     path("new/", NewCounterView.as_view(), name="new_counter"),
-    path("counter/<str:counter_name>", ExistingCounterView.as_view(), name="existing_counter"),
+    path(
+        "counter/<str:counter_name>",
+        ExistingCounterView.as_view(),
+        name="existing_counter",
+    ),
     path(
         "counter/<str:counter_name>/json",
         ExistingCounterJsonView.as_view(),
         name="existing_counter_json",
     ),
-    path("counter/<str:counter_name>/add", AddToCounterView.as_view(), name="add_to_counter"),
+    path(
+        "counter/<str:counter_name>/add",
+        AddToCounterView.as_view(),
+        name="add_to_counter",
+    ),
     path(
         "counter/<str:counter_name>/subtract",
         SubtractFromCounterView.as_view(),

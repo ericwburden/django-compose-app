@@ -22,7 +22,9 @@ class HomePageView(FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("existing_counter", kwargs={"counter_name": self.counter_name})
+        return reverse_lazy(
+            "existing_counter", kwargs={"counter_name": self.counter_name}
+        )
 
 
 class NewCounterView(CreateView):
@@ -35,19 +37,28 @@ class NewCounterView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("existing_counter", kwargs={"counter_name": self.counter_name})
+        return reverse_lazy(
+            "existing_counter", kwargs={"counter_name": self.counter_name}
+        )
 
 
 class AddToCounterView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         Counter.objects.filter(counter_name=kwargs["counter_name"]).update(value=F("value") + 1)
-        return reverse_lazy("existing_counter", kwargs={"counter_name": kwargs["counter_name"]})
+        Counter.objects.filter(counter_name=kwargs["counter_name"]).update(total=F("total") + 1)
+        return reverse_lazy(
+            "existing_counter", kwargs={"counter_name": kwargs["counter_name"]}
+        )
 
 
 class SubtractFromCounterView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        Counter.objects.filter(counter_name=kwargs["counter_name"], value__gt=0).update(value=F("value") - 1)
-        return reverse_lazy("existing_counter", kwargs={"counter_name": kwargs["counter_name"]})
+        Counter.objects.filter(counter_name=kwargs["counter_name"], value__gt=0).update(
+            value=F("value") - 1
+        )
+        return reverse_lazy(
+            "existing_counter", kwargs={"counter_name": kwargs["counter_name"]}
+        )
 
 
 class ExistingCounterView(DetailView):

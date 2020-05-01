@@ -58,6 +58,7 @@ class Counter(models.Model):
     )
     max_value = models.IntegerField(verbose_name="Maximum counter value")
     value = models.IntegerField(verbose_name="Current counter value", default=0)
+    total = models.IntegerField(verbose_name="Total", default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def warning_threshold(self):
