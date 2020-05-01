@@ -1,0 +1,56 @@
+{% extends 'keepcount/base.html' %}
+
+{% block title %}New Counter{% endblock %}
+
+{% block content %}
+<div class="row d-flex justify-content-center">
+  <div class="col-sm-6 col-xs-12">
+    <div class="card bg-light mb-3">
+      <div class="card-header"><h3>New Counter</h3></div>
+      <div class="card-body">
+        <div>
+          <div class="row d-flex justify-content-center">
+            <div class="col-sm-10 col-xs-12">
+              {% if form.errors %}
+                {% for field in form %}{% for error in field.errors %}
+                  <p class="text-danger">{{ error }}</p>
+                {% endfor %}{% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+
+          <form method="post" action="{% url 'new_counter' %}">
+            {% csrf_token %}
+            <div class="row d-flex justify-content-center">
+              <div class="col-sm-10 col-xs-12">
+                <div class="form-group">
+                    <label for="{{ form.counter_name.id_for_label }}">Name your Counter</label>
+                    {{ form.counter_name }}
+                    <small class="text-muted">Names can consist of letters, numbers, underscores (_), and dashes (-).</small>
+                </div>
+              </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+              <div class="col-sm-10 col-xs-12">
+                <div class="form-group">
+                    {{ form.max_value.label_tag }}
+                    {{ form.max_value }}
+                    <small class="text-muted">{{ form.password1.help_text|safe }}</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row d-flex justify-content-center">
+              <div class="col-sm-6 col-xs-12 d-flex justify-content-center">
+                <input type="submit" class="btn btn-primary" value="Create New Counter">
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

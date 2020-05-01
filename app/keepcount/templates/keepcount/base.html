@@ -10,15 +10,16 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="{% static 'keepcount/css/bootstrap-theme.min.css' %}"> -->
 
   <!-- Iconic CSS -->
-  <link rel="stylesheet" href="{% static 'base/css/open-iconic-bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'keepcount/css/open-iconic-bootstrap.min.css' %}">
 
   <!-- Favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'base/favicon/apple-touch-icon.png' %}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'base/favicon/favicon-32x32.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'base/favicon/favicon-16x16.png' %}">
-  <link rel="manifest" href="{% static 'base/favicon/site.webmanifest' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'keepcount/favicon/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'keepcount/favicon/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'keepcount/favicon/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'keepcount/favicon/site.webmanifest' %}">
   
   <!--Need to load jQuery in the head to support scripting in child templates-->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -26,7 +27,7 @@
   <title>{% block title %}{{ APP_TITLE }}{% endblock %}</title>
 </head>
 
-<body>
+<body class="bg-dark">
   <div class="container mt-5">
     {% block content %}{% endblock %}
   </div>
@@ -44,4 +45,3 @@
   </script>
 </body>
 </html>
-{% endtimezone %}

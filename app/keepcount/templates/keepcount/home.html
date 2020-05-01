@@ -1,0 +1,41 @@
+{% extends 'keepcount/base.html' %}
+
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row d-flex justify-content-center">
+  <div class="col-lg-6 col-md-8 col-sm-12" id="main-col">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <div class="container">
+          <div class="row py-2">
+            <div class="col">
+              <small class="text-muted">Click here to create a new counter...</small>
+              <a href="{% url 'new_counter' %}" class="btn btn-primary btn-block">New Counter</a>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <small class="text-muted">...or search for an existing counter.</small>
+            </div>
+          </div>
+          <form method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+            <div class="row py-1">
+              <div class="col-md-8 col-sm-6 col-6 py-1">
+                {{ form.counter_name }}
+              </div>
+              <div class="col-md-4 col-sm-6 col-6 py-1">
+                <input type="submit" class="btn btn-primary btn-block" value="Find Counter">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
