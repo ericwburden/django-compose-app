@@ -1,9 +1,8 @@
-from .models import Profile, Counter
+from .models import Profile, Counter, CounterHistory
 from .forms import NewCounterForm, CounterNameSearch
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.db.models import F
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -44,20 +43,28 @@ class NewCounterView(CreateView):
 
 class AddToCounterView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        Counter.objects.filter(counter_name=kwargs["counter_name"]).update(value=F("value") + 1)
-        Counter.objects.filter(counter_name=kwargs["counter_name"]).update(total=F("total") + 1)
+        # Counter.objects.filter(counter_name=kwargs["counter_name"]).update(
+        #     value=F("value") + 1
+        # )
+        # Counter.objects.filter(counter_name=kwargs["counter_name"]).update(
+        #     total=F("total") + 1
+        # )
+        counter = Counter.objects.get(counter_name=kwargs["counter_name"])
+        counter.increment()
         return reverse_lazy(
-            "existing_counter", kwargs={"counter_name": kwargs["counter_name"]}
+            "existing_counter_json", kwargs={"counter_name": kwargs["counter_name"]}
         )
 
 
 class SubtractFromCounterView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        Counter.objects.filter(counter_name=kwargs["counter_name"], value__gt=0).update(
-            value=F("value") - 1
-        )
+        # Counter.objects.filter(counter_name=kwargs["counter_name"], value__gt=0).update(
+        #     value=F("value") - 1
+        # )
+        counter = Counter.objects.get(counter_name=kwargs["counter_name"])
+        counter.decrement()
         return reverse_lazy(
-            "existing_counter", kwargs={"counter_name": kwargs["counter_name"]}
+            "existing_counter_json", kwargs={"counter_name": kwargs["counter_name"]}
         )
 
 

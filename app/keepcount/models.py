@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models import F
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -63,3 +64,40 @@ class Counter(models.Model):
 
     def warning_threshold(self):
         return self.max_value * 0.9
+
+    def increment(self):
+        Counter.objects.filter(counter_name=self.counter_name).update(
+            value=F("value") + 1
+        )
+        Counter.objects.filter(counter_name=self.counter_name).update(
+            total=F("total") + 1
+        )
+        history = CounterHistory(
+            counter=self, operation=1, value=self.value + 1, total=self.total + 1
+        )
+        history.save()
+        return self
+
+    def decrement(self):
+        Counter.objects.filter(counter_name=self.counter_name, value__gt=0).update(
+            value=F("value") - 1
+        )
+        history = CounterHistory(
+            counter=self, operation=-1, value=self.value - 1, total=self.total
+        )
+        history.save()
+        return self
+
+
+class CounterHistory(models.Model):
+    class Operation(models.IntegerChoices):
+        SUBTRACT = -1
+        ADD = 1
+
+    counter = models.ForeignKey(
+        Counter, on_delete=models.CASCADE, related_name="history"
+    )
+    recorded = models.DateTimeField(auto_now_add=True)
+    operation = models.IntegerField(choices=Operation.choices)
+    value = models.IntegerField(verbose_name="Current counter value", default=0)
+    total = models.IntegerField(verbose_name="Total", default=0)

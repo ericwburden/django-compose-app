@@ -180,14 +180,18 @@
   })
 
   $("#adder").click(() => {
-    $.get("{% url 'add_to_counter' counter.counter_name %}", () => {
-      updateCounterValue();
+    $.get("{% url 'add_to_counter' counter.counter_name %}", (data) => {
+      $("#counter_value").text(data.value);
+      $("#total_value").text(data.total);
+      updateText();
     });
   })
 
   $("#subtracter").click(() => {
-    $.get("{% url 'subtract_from_counter' counter.counter_name %}", () => {
-      updateCounterValue();
+    $.get("{% url 'subtract_from_counter' counter.counter_name %}", (data) => {
+      $("#counter_value").text(data.value);
+      $("#total_value").text(data.total);
+      updateText();
     });
   })
 
