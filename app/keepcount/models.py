@@ -76,16 +76,19 @@ class Counter(models.Model):
             counter=self, operation=1, value=self.value + 1, total=self.total + 1
         )
         history.save()
+        self.refresh_from_db()
         return self
 
     def decrement(self):
-        Counter.objects.filter(counter_name=self.counter_name, value__gt=0).update(
-            value=F("value") - 1
-        )
-        history = CounterHistory(
-            counter=self, operation=-1, value=self.value - 1, total=self.total
-        )
-        history.save()
+        if self.value > 0:
+            Counter.objects.filter(counter_name=self.counter_name).update(
+                value=F("value") - 1
+            )
+            history = CounterHistory(
+                counter=self, operation=-1, value=self.value - 1, total=self.total
+            )
+            history.save()
+            self.refresh_from_db()
         return self
 
 

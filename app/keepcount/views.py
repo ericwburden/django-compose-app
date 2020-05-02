@@ -41,31 +41,28 @@ class NewCounterView(CreateView):
         )
 
 
-class AddToCounterView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        # Counter.objects.filter(counter_name=kwargs["counter_name"]).update(
-        #     value=F("value") + 1
-        # )
-        # Counter.objects.filter(counter_name=kwargs["counter_name"]).update(
-        #     total=F("total") + 1
-        # )
-        counter = Counter.objects.get(counter_name=kwargs["counter_name"])
+class AddToCounterView(DetailView):
+    model = Counter
+    slug_field = "counter_name"
+    slug_url_kwarg = "counter_name"
+
+    def render_to_response(self, context, **response_kwargs):
+        counter = context["object"]
         counter.increment()
-        return reverse_lazy(
-            "existing_counter_json", kwargs={"counter_name": kwargs["counter_name"]}
-        )
+        dict_obj = model_to_dict(counter)
+        return JsonResponse(dict_obj, **response_kwargs)
 
 
-class SubtractFromCounterView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        # Counter.objects.filter(counter_name=kwargs["counter_name"], value__gt=0).update(
-        #     value=F("value") - 1
-        # )
-        counter = Counter.objects.get(counter_name=kwargs["counter_name"])
+class SubtractFromCounterView(DetailView):
+    model = Counter
+    slug_field = "counter_name"
+    slug_url_kwarg = "counter_name"
+
+    def render_to_response(self, context, **response_kwargs):
+        counter = context["object"]
         counter.decrement()
-        return reverse_lazy(
-            "existing_counter_json", kwargs={"counter_name": kwargs["counter_name"]}
-        )
+        dict_obj = model_to_dict(counter)
+        return JsonResponse(dict_obj, **response_kwargs)
 
 
 class ExistingCounterView(DetailView):
