@@ -104,3 +104,10 @@ class CounterHistory(models.Model):
     operation = models.IntegerField(choices=Operation.choices)
     value = models.IntegerField(verbose_name="Current counter value", default=0)
     total = models.IntegerField(verbose_name="Total", default=0)
+
+
+class CounterPosition(models.Model):
+    counter = models.OneToOneField(Counter, on_delete=models.CASCADE, primary_key=True)
+    accuracy = models.IntegerField()
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)

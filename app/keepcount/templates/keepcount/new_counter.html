@@ -41,6 +41,24 @@
               </div>
             </div>
 
+            <div class="row d-none">
+              <div class="col">
+                {{ counterposition.management_form }}
+                {% for form in counterposition.forms %}
+                  {% for field in form.visible_fields %}
+                    {% if forloop.first %}
+                      {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                      {% endfor %}
+                    {% endif %}
+
+                    {{ field.errors.as_ul }}
+                    {{ field }}
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+
             <div class="row d-flex justify-content-center">
               <div class="col-sm-6 col-xs-12 d-flex justify-content-center">
                 <input type="submit" class="btn btn-primary" value="Create New Counter">
@@ -53,4 +71,14 @@
     </div>
   </div>
 </div>
+
+<script>
+  function setPosition(position) {
+    $("#id_counterposition-0-accuracy").val(position.coords.accuracy);
+    $("#id_counterposition-0-latitude").val(position.coords.latitude.toFixed(6));
+    $("#id_counterposition-0-longitude").val(position.coords.longitude.toFixed(6));
+  }
+
+  $(() => navigator.geolocation.getCurrentPosition(setPosition))
+</script>
 {% endblock %}

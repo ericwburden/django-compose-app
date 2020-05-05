@@ -1,8 +1,9 @@
-from .models import Profile, Counter, CounterHistory
-from .forms import NewCounterForm, CounterNameSearch
+from .models import Profile, Counter, CounterHistory, CounterPosition
+from .forms import NewCounterForm, CounterNameSearch, CounterPositionFormset
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.db import transaction
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -31,9 +32,25 @@ class NewCounterView(CreateView):
     template_name = "keepcount/new_counter.html"
     form_class = NewCounterForm
 
+    def get_context_data(self, **kwargs):
+        data = super(NewCounterView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data['counterposition'] = CounterPositionFormset(self.request.POST)
+        else:
+            data['counterposition'] = CounterPositionFormset()
+        return data
+
     def form_valid(self, form):
+        context = self.get_context_data()
+        counterposition = context['counterposition']
+        with transaction.atomic():
+            self.object = form.save()
+
+            if counterposition.is_valid():
+                counterposition.instance = self.object
+                counterposition.save()
         self.counter_name = form.cleaned_data["counter_name"]
-        return super().form_valid(form)
+        return super(NewCounterView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy(
