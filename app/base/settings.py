@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    'channels',
     "keepcount.apps.KeepcountConfig",
     "allauth",
     "allauth.account",
@@ -77,7 +78,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "base.wsgi.application"
+ASGI_APPLICATION = "base.routing.application"
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

@@ -45,6 +45,92 @@
     font-family: "Lucida Console", Monaco, monospace;
     filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
   }
+
+  /* CSS for loading spinner */
+  .lds-roller {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-roller div {
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 40px 40px;
+  }
+  .lds-roller div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #343a40;
+    margin: -4px 0 0 -4px;
+  }
+  .lds-roller div:nth-child(1) {
+    animation-delay: -0.036s;
+  }
+  .lds-roller div:nth-child(1):after {
+    top: 63px;
+    left: 63px;
+  }
+  .lds-roller div:nth-child(2) {
+    animation-delay: -0.072s;
+  }
+  .lds-roller div:nth-child(2):after {
+    top: 68px;
+    left: 56px;
+  }
+  .lds-roller div:nth-child(3) {
+    animation-delay: -0.108s;
+  }
+  .lds-roller div:nth-child(3):after {
+    top: 71px;
+    left: 48px;
+  }
+  .lds-roller div:nth-child(4) {
+    animation-delay: -0.144s;
+  }
+  .lds-roller div:nth-child(4):after {
+    top: 72px;
+    left: 40px;
+  }
+  .lds-roller div:nth-child(5) {
+    animation-delay: -0.18s;
+  }
+  .lds-roller div:nth-child(5):after {
+    top: 71px;
+    left: 32px;
+  }
+  .lds-roller div:nth-child(6) {
+    animation-delay: -0.216s;
+  }
+  .lds-roller div:nth-child(6):after {
+    top: 68px;
+    left: 24px;
+  }
+  .lds-roller div:nth-child(7) {
+    animation-delay: -0.252s;
+  }
+  .lds-roller div:nth-child(7):after {
+    top: 63px;
+    left: 17px;
+  }
+  .lds-roller div:nth-child(8) {
+    animation-delay: -0.288s;
+  }
+  .lds-roller div:nth-child(8):after {
+    top: 56px;
+    left: 12px;
+  }
+  @keyframes lds-roller {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 </style>
 
 <!-- Modal -->
@@ -69,7 +155,7 @@
     <div class="card bg-light mb-3">
       <div class="card-header">
         <div class="row">
-          <div class="col-8">
+          <div class="col-8 text-truncate">
             <h2>{{ counter.counter_name }}</h2>
           </div>
           <div class="col-4 d-flex justify-content-end">
@@ -91,22 +177,39 @@
       </div>
       <div class="card-body pt-0">
         <div class="container">
-          <div class="row mt-0 pt-0">
-            <div class="col text-center">
-              <span class="lead" style="font-size:3rem;">Current</span>
+          <div class="row align-items-center" style="height:340px;display:flex;" id="loader">
+            <div class="col d-flex justify-content-center">
+              <div class="lds-roller">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
             </div>
           </div>
-          <div class="row mb-2" id="value_wrap">
-            <div class="col text-center px-0">
-              <svg viewBox="0 0 28 16" class="counter_svg">
-                <text 
-                  x="50%" y="50%" 
-                  text-anchor="middle" 
-                  dominant-baseline="middle" 
-                  id="counter_value">
-                    {{ counter.value }}
-                </text>
-              </svg>
+
+          <div id="counter" style="display:none;">
+            <div class="row mt-0 pt-0">
+              <div class="col text-center">
+                <span class="lead" style="font-size:3rem;">Current</span>
+              </div>
+            </div>
+            <div class="row mb-2" id="value_wrap">
+              <div class="col text-center px-0">
+                <svg viewBox="0 0 28 16" class="counter_svg">
+                  <text 
+                    x="50%" y="50%" 
+                    text-anchor="middle" 
+                    dominant-baseline="middle" 
+                    id="counter_value">
+                      {{ counter.value }}
+                  </text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -154,56 +257,17 @@
       $("#counter_value").attr('fill', '#e9f000');
     }
   }
-
-  $(window).resize(() => {
-    updateText();
-  })
 </script>
 
 <!-- Script to handle AJAX updating counter values -->
 <script>
-  function updateCounterValue() {
-    $.ajax({
-      dataType: "json",
-      type: 'GET',
-      url: "{% url 'existing_counter_json' counter.counter_name %}",
-      success: (data) => {
-        $("#counter_value").text(data.value);
-        $("#total_value").text(data.total);
-        updateText();
-      },
-      complete: (data) => {
-        setTimeout(updateCounterValue, 15000);
-      }
-    });
-  }
 
   // Remove hover classes from buttons on a touchscreen
   window.addEventListener('touchstart', function() {
     $(".no-touch").removeClass("no-touch");
   });
 
-  $(() => {
-    updateText();
-    setTimeout(updateCounterValue, 15000);
-  })
-
-  $("#adder").click(() => {
-    $.get("{% url 'add_to_counter' counter.counter_name %}", (data) => {
-      $("#counter_value").text(data.value);
-      $("#total_value").text(data.total);
-      updateText();
-    });
-  })
-
-  $("#subtracter").click(() => {
-    $.get("{% url 'subtract_from_counter' counter.counter_name %}", (data) => {
-      $("#counter_value").text(data.value);
-      $("#total_value").text(data.total);
-      updateText();
-    });
-  })
-
+  $(() => { updateText(); })
 </script>
 
 <!-- Script to display QR code in modal -->
@@ -213,5 +277,58 @@
     absoluteURL = new URL("{% url 'existing_counter' counter.counter_name %}", document.baseURI).href;
     new QRCode(document.getElementById("qr_code"), absoluteURL);
   })
+</script>
+
+<!-- Websockets Script -->
+<script>
+  function connect() {
+    var ws = new WebSocket(
+      'wss://'
+      + window.location.host
+      + '/ws/counter/'
+      + '{{ counter.counter_name }}'
+      + '/'
+    );
+
+    ws.onopen = function() {
+      $('#loader').hide();
+      $('#counter').show();
+    };
+
+    ws.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      $("#counter_value").text(data.value);
+      $("#total_value").text(data.total);
+      updateText();
+    };
+
+    ws.onclose = function(e) {
+      console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+      setTimeout(function() {
+        connect();
+      }, 1000);
+    };
+
+    ws.onerror = function(err) {
+      console.error('Socket encountered error: ', err.message, 'Closing socket');
+      ws.close();
+    };
+
+    $("#adder").click(() => {
+      ws.send(JSON.stringify({
+        'counter_name': '{{ counter.counter_name }}',
+        'operation': 'add'
+      }));
+    })
+
+    $("#subtracter").click(() => {
+      ws.send(JSON.stringify({
+        'counter_name': '{{ counter.counter_name }}',
+        'operation': 'subtract'
+      }));
+    })
+  }
+
+  $(() => { connect(); })
 </script>
 {% endblock %}
