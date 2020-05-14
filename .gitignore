@@ -133,3 +133,5 @@ GitHub.sublime-settings
 # Visual Studio Code # 
 .vscode/* 
 .history
+deploy/swarm/docker-swarm-prod.yml
+deploy/swarm/configure_worker.sh

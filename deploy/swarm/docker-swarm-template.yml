@@ -1,0 +1,256 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: traefik:v2.0
+    ports:
+      - "80:80"
+      - "8080:8080" # traefik dashboard
+      - "443:443"
+    command:
+      # Dashboard
+      - --api
+      
+      # Debugging
+      - --api.debug=false # enable additional endpoints for debugging and profiling
+      - --log.level=INFO 
+      
+      # Docker Swarm
+      - --providers.docker=true
+      - --providers.docker.swarmMode=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=web
+      
+      # Entrypoints
+      - --entrypoints.web.address=:80
+      - --entrypoints.web-secured.address=:443
+
+      # LetsEncrypt Config
+      - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.myresolver.acme.storage=/acme.json
+      - --certificatesresolvers.myresolver.acme.dnschallenge=true
+      - --certificatesresolvers.myresolver.acme.dnschallenge.provider=${DNS_PROVIDER}
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - web
+    env_file:
+      - .env
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.traefik.tls=true"
+        - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+        - "traefik.http.routers.traefik.rule=Host(`traefik.${HOSTNAME}`)"
+        - "traefik.http.routers.traefik.service=api@internal"
+        - "traefik.http.routers.traefik.middlewares=authtraefik"
+        - "traefik.http.middlewares.authtraefik.basicauth.users=${TRAEFIK_CREDENTIALS}"
+        - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+        # Redirect all HTTP to HTTPS permanently
+        - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
+        - "traefik.http.routers.http_catchall.entrypoints=web"
+        - "traefik.http.routers.http_catchall.middlewares=https_redirect"
+        - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+
+  postgres:
+    image: postgres
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.postgres.loadbalancer.server.port=5432"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+
+  nginx:
+    image: nginx:1.17.4-alpine
+    volumes:
+      - /home/eric/staticfiles/:/usr/share/nginx/html/staticfiles/:ro
+    depends_on: 
+      - django
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.nginx.rule=Host(`keepcount.app`)&&PathPrefix(`/staticfiles/`)"
+        - "traefik.http.services.nginx.loadbalancer.server.port=80"
+        - "traefik.http.routers.nginx.tls=true"
+        - "traefik.http.routers.nginx.tls.certresolver=myresolver"
+    networks:
+      - web
+
+
+  adminer:
+    image: adminer
+    depends_on:
+      - postgres
+    deploy: 
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.adminer.rule=Host(`db.$HOSTNAME`)"
+        - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+        - "traefik.http.routers.adminer.tls=true"
+        - "traefik.http.routers.adminer.tls.certresolver=myresolver"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - web
+      - internal
+    environment:
+      ADMINER_DESIGN: "arcs-material"
+
+
+  django:
+    image: ericwburden/keepcount
+    command: uvicorn base.asgi:application --host 0.0.0.0 --port 8000
+    volumes: 
+      - static_volume:/home/app/staticfiles
+    depends_on:
+      - postgres
+      - traefik
+    deploy: 
+      labels: 
+        - "traefik.enable=true"
+        - "traefik.http.routers.django.rule=Host(`${HOSTNAME}`)"
+        - "traefik.http.services.django.loadbalancer.server.port=8000"
+        - "traefik.http.routers.django.tls=true"
+        - "traefik.http.routers.django.tls.certresolver=myresolver"
+      placement:
+        constraints:
+          - node.role == worker
+      update_config:
+        parallelism: 2
+        delay: 15s
+      mode: replicated
+      replicas: 16
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - web
+      - internal
+    env_file:
+      - .env
+
+  autoheal:
+    image: willfarrell/autoheal
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager 
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.autoheal.loadbalancer.server.port=80"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - internal
+
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    deploy: 
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.grafana.rule=Host(`grafana.${HOSTNAME}`)"
+        - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+        - "traefik.http.routers.grafana.tls=true"
+        - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - web
+      - internal
+
+
+  redis:
+    image: redis:alpine
+    networks:
+      - internal
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable"
+        - "traefik.http.services.redis.loadbalancer.server.port=6379"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+        test: ["CMD", "redis-cli","ping"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
+volumes:
+  letsencrypt: {}
+  postgres_data: {}
+  static_volume: {}
+  grafana_data: {}
