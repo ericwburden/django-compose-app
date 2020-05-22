@@ -1,0 +1,76 @@
+{% extends "dtd_reports/report-nav.html" %}
+
+{% block report %}
+
+<div class="container p-2 bg-light">
+  <div class="row mb-2">
+    <div class="col d-flex justify-content-end">
+      <a href="{% url 'dtd_reports:weekly-report-csv' %}" class="btn btn-primary">Download</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table class="table table-striped">
+        {% for listing in object_list %}
+          {% if forloop.first %}
+          <tr>
+            <th>Week Start</th>
+            <th>Domain</th>
+            <th class="text-center">Calls</th>
+            <th class="text-center">Calls Referred</th>
+            <th class="text-center">Online Requests</th>
+            <th class="text-center">Online Requests Referred</th>
+          </tr>
+          {% endif %}
+          <tr>
+            <td>{{ listing.week_start }}</td>
+            <td>{{ listing.domain }}</td>
+            <td class="text-center">{{ listing.calls }}</td>
+            <td class="text-center">{{ listing.calls_referred }}</td>
+            <td class="text-center">{{ listing.requests }}</td>
+            <td class="text-center">{{ listing.requests_referred }}</td>
+          </tr>
+        {% empty %}
+          <h2>No weekly reports.</h2>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  
+  <nav aria-label="table-navigation">
+    <div class="row">
+      <div class="col-sm-2 d-flex justify-content-start">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a href="?page=1" class="page-link">&laquo; first</a></li>
+            <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="col-sm-8 d-flex justify-content-center">
+        <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+      </div>
+
+      <div class="col-sm-2 d-flex justify-content-end">
+        <ul class="pagination">
+          {% if page_obj.has_next %}
+            <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link">next</a></li>
+            <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">last &raquo;</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<script>
+  $(function() {
+    $("#weekly-report").addClass("active");
+  });
+</script>
+
+
+{% endblock %}

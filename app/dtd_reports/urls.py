@@ -26,6 +26,11 @@ urlpatterns = [
         views.TotalCallsRequestsReport.as_view(),
         name="total-calls-requests-report",
     ),
+    path(
+        'weekly-report',
+        views.WeeklyReportView.as_view(),
+        name="weekly-report"
+    ),
     # Data View URLs -------------------------------------------------------------------
     path("call-type/data", views.call_type_report_data, name="call-type-report-data",),
     path(
@@ -48,4 +53,14 @@ urlpatterns = [
         views.total_calls_requests_report_data,
         name="total-calls-requests-report-data",
     ),
+    path(
+        'weekly-report/data',
+        views.weekly_report_data,
+        name="weekly-report-data"
+    ),
+    path(
+        'weekly-report/csv',
+        views.weekly_report_csv,
+        name="weekly-report-csv"
+    )
 ]
