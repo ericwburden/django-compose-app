@@ -19,6 +19,7 @@ class Agency(models.Model):
 class Call(models.Model):
     INCOMING = "Incoming"
     OUTGOING = "Outgoing"
+    FTP = "Free Tax Prep (Outgoing)"
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -45,8 +46,8 @@ class Call(models.Model):
     caller_gender = models.CharField(verbose_name="Caller Gender", choices = (("M", "Male"), ("F", "Female"), ("O", "Other")), max_length=1, null=True)
     caller_household_size = models.IntegerField(verbose_name="Caller Household Size", null=True)
     call_type = models.CharField(
-        max_length=8,
-        choices=((INCOMING, "Incoming"), (OUTGOING, "Outgoing")),
+        max_length=32,
+        choices=((INCOMING, "Incoming"), (OUTGOING, "Outgoing"), (FTP, "Free Tax Prep (Outgoing)")),
         default="Incoming",
         verbose_name="Type of Call",
     )

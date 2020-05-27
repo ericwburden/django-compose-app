@@ -4,8 +4,20 @@
 
 <div class="container p-2 bg-light">
   <div class="row mb-2">
-    <div class="col d-flex justify-content-end">
-      <a href="{% url 'dtd_reports:weekly-report-csv' %}" class="btn btn-primary">Download</a>
+    <div class="col-sm-10">
+      <p><b>Notes:</b></p>
+      <ul>
+        <li>'Calls' refers to incoming calls. Outgoing calls are connected to online requests.</li>
+        <li>Counts are per week, per domain. A call/request may be counted multiple times if the call/request had multiple domains indicated.</li>
+        <li>The date indicated is the date the week started.</li>
+      </ul>
+    </div>
+    <div class="col-sm-2">
+      <div class="row d-flex justify-content-end">
+        <div class="col d-flex justify-content-end">
+          <a href="{% url 'dtd_reports:weekly-report-csv' %}" class="btn btn-primary my-4">Download</a>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -16,7 +28,7 @@
           <tr>
             <th>Week Start</th>
             <th>Domain</th>
-            <th class="text-center">Calls</th>
+            <th class="text-center">Incoming Calls</th>
             <th class="text-center">Calls Referred</th>
             <th class="text-center">Online Requests</th>
             <th class="text-center">Online Requests Referred</th>
