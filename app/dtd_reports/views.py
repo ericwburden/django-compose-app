@@ -27,6 +27,7 @@ def call_type_report_data(request):
     labels = []
     incoming_calls = []
     outgoing_calls = []
+    ftp_calls = []
     tz = pytz.timezone("America/Chicago")
 
     start_date = timezone.now() - timedelta(days=15)
@@ -46,17 +47,22 @@ def call_type_report_data(request):
                 incoming_calls.append(0)
             if len(labels) > len(outgoing_calls) + 1:
                 outgoing_calls.append(0)
+            if len(labels) > len(ftp_calls) + 1:
+                ftp_calls.append(0)
 
         if entry["call_type"] == "Incoming":
             incoming_calls.append(entry["total_calls"])
         elif entry["call_type"] == "Outgoing":
             outgoing_calls.append(entry["total_calls"])
+        elif entry["call_type"] == "FTP":
+            ftp_calls.append(entry["total_calls"])
 
     return JsonResponse(
         data={
             "labels": labels,
             "incoming_calls": incoming_calls,
             "outgoing_calls": outgoing_calls,
+            "ftp_calls": ftp_calls
         }
     )
 
