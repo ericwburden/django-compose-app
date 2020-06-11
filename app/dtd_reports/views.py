@@ -71,6 +71,7 @@ def call_duration_report_data(request):
     labels = []
     incoming_calls = []
     outgoing_calls = []
+    ftp_calls = []
     tz = pytz.timezone("America/Chicago")
 
     start_date = timezone.now() - timedelta(days=15)
@@ -93,20 +94,25 @@ def call_duration_report_data(request):
         if date_string not in labels:
             labels.append(date_string)
             if len(labels) > len(incoming_calls) + 1:
-                incoming_calls.append(0)
+                incoming_calls.append(None)
             if len(labels) > len(outgoing_calls) + 1:
-                outgoing_calls.append(0)
+                outgoing_calls.append(None)
+            if len(labels) > len(ftp_calls) + 1:
+                ftp_calls.append(None)
 
         if entry["call_type"] == "Incoming":
             incoming_calls.append(minutes)
         elif entry["call_type"] == "Outgoing":
             outgoing_calls.append(minutes)
+        elif entry["call_type"] == "FTP":
+            ftp_calls.append(minutes)
 
     return JsonResponse(
         data={
             "labels": labels,
             "incoming_calls": incoming_calls,
             "outgoing_calls": outgoing_calls,
+            "ftp_calls": ftp_calls
         }
     )
 
