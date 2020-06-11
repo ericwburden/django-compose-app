@@ -44,11 +44,11 @@ def call_type_report_data(request):
         if date_string not in labels:
             labels.append(date_string)
             if len(labels) > len(incoming_calls) + 1:
-                incoming_calls.append(0)
+                incoming_calls.append(None)
             if len(labels) > len(outgoing_calls) + 1:
-                outgoing_calls.append(0)
+                outgoing_calls.append(None)
             if len(labels) > len(ftp_calls) + 1:
-                ftp_calls.append(0)
+                ftp_calls.append(None)
 
         if entry["call_type"] == "Incoming":
             incoming_calls.append(entry["total_calls"])
