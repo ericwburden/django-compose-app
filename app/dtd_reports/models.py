@@ -7,7 +7,9 @@ class WeeklyReport(models.Model):
     calls = models.IntegerField(verbose_name="Number of Calls")
     calls_referred = models.IntegerField(verbose_name="Number of Calls Referred")
     requests = models.IntegerField(verbose_name="Number of Online Requests")
-    requests_referred = models.IntegerField(verbose_name="Number of Online Requests Referred")
+    requests_referred = models.IntegerField(
+        verbose_name="Number of Online Requests Referred"
+    )
 
     class Meta:
         managed = False

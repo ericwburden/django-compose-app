@@ -62,7 +62,7 @@ def call_type_report_data(request):
             "labels": labels,
             "incoming_calls": incoming_calls,
             "outgoing_calls": outgoing_calls,
-            "ftp_calls": ftp_calls
+            "ftp_calls": ftp_calls,
         }
     )
 
@@ -112,7 +112,7 @@ def call_duration_report_data(request):
             "labels": labels,
             "incoming_calls": incoming_calls,
             "outgoing_calls": outgoing_calls,
-            "ftp_calls": ftp_calls
+            "ftp_calls": ftp_calls,
         }
     )
 
@@ -156,29 +156,47 @@ def total_calls_requests_report_data(request):
 
 
 def weekly_report_data(request):
-    current_week_records = WeeklyReport.objects.annotate(current_week=Max('week_start')).filter(week_start=F('current_week'))
-    return JsonResponse(data={'reports': [model_to_dict(i) for i in current_week_records]})
+    current_week_records = WeeklyReport.objects.annotate(
+        current_week=Max("week_start")
+    ).filter(week_start=F("current_week"))
+    return JsonResponse(
+        data={"reports": [model_to_dict(i) for i in current_week_records]}
+    )
 
 
 def weekly_report_csv(request):
-    weekly_report_records = WeeklyReport.objects.order_by('week_start').all()
+    weekly_report_records = WeeklyReport.objects.order_by("week_start").all()
     file_name = f"Weekly Call Center Report as of {datetime.now().date()}.csv"
 
-    if not os.path.exists(os.path.join(settings.BASE_DIR, 'data')):
-        os.makedirs(os.path.join(settings.BASE_DIR, 'data'))
+    if not os.path.exists(os.path.join(settings.BASE_DIR, "data")):
+        os.makedirs(os.path.join(settings.BASE_DIR, "data"))
 
-    file_path = os.path.join(settings.BASE_DIR, f'data/{file_name}')
-    with open(file_path, 'w') as output_file:
-        writer = csv.writer(output_file, delimiter=',') 
-        headers = ['Week Start', 'Domain', 'Calls', 'Calls Referred', 'Online Requests', 'Online Requests Referred']  
+    file_path = os.path.join(settings.BASE_DIR, f"data/{file_name}")
+    with open(file_path, "w") as output_file:
+        writer = csv.writer(output_file, delimiter=",")
+        headers = [
+            "Week Start",
+            "Domain",
+            "Calls",
+            "Calls Referred",
+            "Online Requests",
+            "Online Requests Referred",
+        ]
         writer.writerow(headers)
         for w in weekly_report_records:
-            row = [w.week_start, w.domain, w.calls, w.calls_referred, w.requests, w.requests_referred]
+            row = [
+                w.week_start,
+                w.domain,
+                w.calls,
+                w.calls_referred,
+                w.requests,
+                w.requests_referred,
+            ]
             writer.writerow(row)
 
-    with open(file_path,'r') as csv_file:
-        resp = HttpResponse(csv_file.read(), content_type='application/x-download')
-        resp['Content-Disposition'] = f'attachment;filename={file_name}'
+    with open(file_path, "r") as csv_file:
+        resp = HttpResponse(csv_file.read(), content_type="application/x-download")
+        resp["Content-Disposition"] = f"attachment;filename={file_name}"
     return resp
 
 

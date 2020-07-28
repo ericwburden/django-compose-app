@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dtd_calls', '0005_call_update_status'),
+        ("dtd_calls", "0005_call_update_status"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='call',
-            name='call_type',
-            field=models.CharField(choices=[('Incoming', 'Incoming'), ('Outgoing', 'Outgoing'), ('FTP', 'Free Tax Prep (Outgoing)')], default='Incoming', max_length=8, verbose_name='Type of Call'),
+            model_name="call",
+            name="call_type",
+            field=models.CharField(
+                choices=[
+                    ("Incoming", "Incoming"),
+                    ("Outgoing", "Outgoing"),
+                    ("FTP", "Free Tax Prep (Outgoing)"),
+                ],
+                default="Incoming",
+                max_length=8,
+                verbose_name="Type of Call",
+            ),
         ),
     ]

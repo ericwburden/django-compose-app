@@ -84,7 +84,9 @@ class CallUpdateView(LoginRequiredMixin, UpdateView):
                 status_form.instance = self.object
                 print(status_form.cleaned_data)
                 status = status_form.cleaned_data[0]["status"]
-                new_status = CallStatus(call=self.object, status=status, updated_by=self.request.user)
+                new_status = CallStatus(
+                    call=self.object, status=status, updated_by=self.request.user
+                )
                 new_status.save()
         return HttpResponseRedirect(
             reverse_lazy("dtd_calls:call_detail", kwargs={"pk": self.object.id})

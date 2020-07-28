@@ -9,36 +9,81 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('dtd_calls', '0004_call_demographics_update'),
+        ("dtd_calls", "0004_call_demographics_update"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='call',
-            name='assigned_to',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='call_assigned_to', to=settings.AUTH_USER_MODEL),
+            model_name="call",
+            name="assigned_to",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="call_assigned_to",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='call',
-            name='followup_notes',
-            field=models.TextField(blank=True, null=True, verbose_name='Followup Notes'),
+            model_name="call",
+            name="followup_notes",
+            field=models.TextField(
+                blank=True, null=True, verbose_name="Followup Notes"
+            ),
         ),
         migrations.AlterField(
-            model_name='domain',
-            name='call',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='domains', to='dtd_calls.Call'),
+            model_name="domain",
+            name="call",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="domains",
+                to="dtd_calls.Call",
+            ),
         ),
         migrations.CreateModel(
-            name='CallStatus',
+            name="CallStatus",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('status', models.IntegerField(choices=[(1, 'Contacted'), (2, 'Referred'), (3, 'Shared Information'), (4, 'Closed')], verbose_name='Call Status')),
-                ('call', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='statuses', to='dtd_calls.Call')),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='status_updated_by', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Contacted"),
+                            (2, "Referred"),
+                            (3, "Shared Information"),
+                            (4, "Closed"),
+                        ],
+                        verbose_name="Call Status",
+                    ),
+                ),
+                (
+                    "call",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="statuses",
+                        to="dtd_calls.Call",
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="status_updated_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-            options={
-                'ordering': ['-created_at'],
-            },
+            options={"ordering": ["-created_at"],},
         ),
     ]

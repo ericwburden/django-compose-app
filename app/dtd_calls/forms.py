@@ -55,11 +55,15 @@ class CallStatusForm(forms.ModelForm):
             "status",
         ]
         widgets = {
-            "status": forms.Select(attrs={"class": "form-control call-status", "required": True})
+            "status": forms.Select(
+                attrs={"class": "form-control call-status", "required": True}
+            )
         }
 
 
-CallStatusFormset = forms.models.inlineformset_factory(Call, CallStatus, form=CallStatusForm, extra=1, can_delete=False)
+CallStatusFormset = forms.models.inlineformset_factory(
+    Call, CallStatus, form=CallStatusForm, extra=1, can_delete=False
+)
 
 
 class UpdateCallForm(forms.ModelForm):
@@ -82,7 +86,7 @@ class UpdateCallForm(forms.ModelForm):
             "referred_agency",
             "notes",
             "followup_notes",
-            "assigned_to"
+            "assigned_to",
         ]
 
     def __init__(self, *args, **kwargs):
