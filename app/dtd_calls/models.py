@@ -108,6 +108,8 @@ class Call(models.Model):
             ("radio", "Radio Ad"),
             ("other", "Other"),
         ],
+        null=True,
+        blank=True,
     )
 
     def duration(self):
