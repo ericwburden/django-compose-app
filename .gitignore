@@ -30,6 +30,7 @@ app/*/migrations/*.py
 !app/dtd_calls/migrations/0005_call_update_status.py
 !app/dtd_calls/migrations/0006_add_ftp_call_choice.py
 !app/dtd_calls/migrations/0007_call_call_source.py
+!app/dtd_calls/migrations/0008_call_caller_dob.py
 
 # Static Files #
 app/staticfiles/*

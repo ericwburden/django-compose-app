@@ -146,9 +146,26 @@
       </div>
     </div>
 
-    <!--Row 5, Caller Age, Gender, Household Size-->
+    <!--Row 5, Caller DOB, Caller Age, Gender, Household Size-->
     <div class="row py-2">
-      <div class="col-sm-4">
+      <div class="col-sm-3">
+        <div class="form-group">
+          {{ form.caller_dob.label_tag }}
+          <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+            {{ form.caller_dob }}
+            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                <div class="input-group-text">
+                  <img src="{% static 'dtd_request/icons/svg/calendar.svg' %}" class="img-fluid" style="width:1.5em;height:1.3rem;" alt="Pick Date">
+                </div>
+            </div>
+          </div>
+          <div class="text-danger">
+            {{ form.caller_dob.errors }}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3">
         <div class="form-group">
           {{ form.caller_age.label_tag }}
           {{ form.caller_age }}
@@ -157,7 +174,8 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+
+      <div class="col-sm-3">
         <div class="form-group">
           {{ form.caller_gender.label_tag }}
           {{ form.caller_gender }}
@@ -166,7 +184,8 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+
+      <div class="col-sm-3">
         <div class="form-group">
           {{ form.caller_household_size.label_tag }}
           {{ form.caller_household_size }}
@@ -405,6 +424,15 @@
     } else {
       $("#otherAgency").removeAttr('required').attr('hidden', true).val("");
     }
+  });
+</script>
+
+<!-- Script to initialize datepicker fields -->
+<script type="text/javascript">
+  $(function () {
+      $('#datetimepicker1').datetimepicker({
+        format: 'L'
+      });
   });
 </script>
 

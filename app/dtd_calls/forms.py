@@ -34,6 +34,7 @@ class CallForm(forms.ModelForm):
             "caller_state",
             "caller_zip",
             "caller_age",
+            "caller_dob",
             "caller_gender",
             "caller_household_size",
             "covid_related",
@@ -47,6 +48,14 @@ class CallForm(forms.ModelForm):
         super(CallForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
+
+        self.fields['caller_dob'].widget.attrs.update({
+            'class': 'form-control datetimepicker-input',
+            "data-target": "#datetimepicker1",
+            "placeholder": "mm/dd/yyyy"
+        })
+        self.fields["caller_dob"].widget.format = "%m/%d/%Y"
+        self.fields["caller_dob"].input_formats = ["%m/%d/%Y"]
 
 
 class CallStatusForm(forms.ModelForm):
@@ -79,6 +88,7 @@ class UpdateCallForm(forms.ModelForm):
             "caller_state",
             "caller_zip",
             "caller_age",
+            "caller_dob",
             "caller_gender",
             "caller_household_size",
             "covid_related",
@@ -95,3 +105,11 @@ class UpdateCallForm(forms.ModelForm):
         super(UpdateCallForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
+
+        self.fields['caller_dob'].widget.attrs.update({
+            'class': 'form-control datetimepicker-input',
+            "data-target": "#datetimepicker1",
+            "placeholder": "mm/dd/yyyy"
+        })
+        self.fields["caller_dob"].widget.format = "%m/%d/%Y"
+        self.fields["caller_dob"].input_formats = ["%m/%d/%Y"]

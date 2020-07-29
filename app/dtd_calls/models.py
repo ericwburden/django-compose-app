@@ -50,6 +50,7 @@ class Call(models.Model):
         help_text="###-###-####",
     )
     caller_email = models.EmailField(verbose_name="Caller Email Address", null=True)
+    caller_dob = models.DateField(verbose_name="Caller Date of Birth", null=True, blank=True)
     caller_age = models.IntegerField(verbose_name="Caller Age", null=True)
     caller_gender = models.CharField(
         verbose_name="Caller Gender",
