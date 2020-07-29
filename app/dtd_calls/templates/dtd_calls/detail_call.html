@@ -25,6 +25,7 @@
           <dd> - <b>Email Address: </b>{{ call.caller_email }}</dd>
           <dd> - <b>Address: </b>{{ call.caller_address }}</dd>
           <dd> - <b>City/State/Zip: </b>{{ call.caller_city }}/{{ call.caller_state }}/{{ call.caller_zip }}</dd>
+          <dd> - <b>Birth Date: </b>{{ call.caller_dob |  date:"m/d/Y" }}</dd>
           <dd> - <b>Age: </b>{{ call.caller_age }}</dd>
           <dd> - <b>Gender: </b>{{ call.caller_gender }}</dd>
           <dd> - <b>Household Size: </b>{{ call.caller_household_size }}</dd>
