@@ -107,7 +107,7 @@ Displays pre-configured reports on call center activity, including:
 Represents the name of a agency, available in the 'Referred Agency' field on the
 new call form
 
-**Fields**
+_Fields_
 
 - name: varchar(256); name of the agency
 
@@ -115,7 +115,7 @@ new call form
 
 Represents a call recorded in the new call form
 
-**Fields**
+_Fields_
 
 - created_at: datetime; timestamp record was created
 - updated_at: datetime; timestamp record was updated
@@ -157,7 +157,7 @@ Represents a call recorded in the new call form
 
 Represents a TTS domain associated with an individual call
 
-**Fields**
+_Fields_
 
 - call: int; Foreign Key to the Call table
 - domain: int; lookup value for the TTS Domains, one of:
@@ -187,7 +187,7 @@ Represents a TTS domain associated with an individual call
 
 Indicates a status for a call at a given point in time
 
-**Fields**
+_Fields_
 
 - created_at: datetime; timestamp record was created
 - call: int; Foreign Key to the Call table
@@ -202,7 +202,7 @@ Indicates a status for a call at a given point in time
 
 Represents a request made through the online request form
 
-**Fields**
+_Fields_
 
 - created_at: datetime; timestamp record was created
 - updated_at: datetime; timestamp record was updated
@@ -219,7 +219,7 @@ Represents a request made through the online request form
 
 Represents a TTS domain associated with an individual request
 
-**Fields**
+_Fields_
 
 - request: int; Foreign Key to the Request table
 - domain: int; lookup value for the TTS Domains, one of:
@@ -249,7 +249,7 @@ Represents a TTS domain associated with an individual request
 
 Represents a response by a DTD staff to a request
 
-**Fields**
+_Fields_
 
 - request: int; Foreign Key to the Request table
 - created_at: datetime; timestamp of record creation
@@ -284,44 +284,44 @@ Table Name: calls_by_age
 SQL:
 
 ```sql
-   SELECT
-        CASE
-            WHEN (dtd_calls_call.caller_age < 18) THEN '< 18'::text
-            WHEN (dtd_calls_call.caller_age < 30) THEN '18 - 29'::text
-            WHEN (dtd_calls_call.caller_age < 40) THEN '30 - 39'::text
-            WHEN (dtd_calls_call.caller_age < 50) THEN '40 - 49'::text
-            WHEN (dtd_calls_call.caller_age < 60) THEN '50 - 59'::text
-            WHEN (dtd_calls_call.caller_age < 70) THEN '60 - 69'::text
-            WHEN (dtd_calls_call.caller_age < 80) THEN '70 - 79'::text
-            WHEN (dtd_calls_call.caller_age >= 80) THEN '80+'::text
-            ELSE 'None Listed'::text
-        END AS age_category,
-    count(*) AS calls
-   FROM dtd_calls_call
-  GROUP BY
-        CASE
-            WHEN (dtd_calls_call.caller_age < 18) THEN '< 18'::text
-            WHEN (dtd_calls_call.caller_age < 30) THEN '18 - 29'::text
-            WHEN (dtd_calls_call.caller_age < 40) THEN '30 - 39'::text
-            WHEN (dtd_calls_call.caller_age < 50) THEN '40 - 49'::text
-            WHEN (dtd_calls_call.caller_age < 60) THEN '50 - 59'::text
-            WHEN (dtd_calls_call.caller_age < 70) THEN '60 - 69'::text
-            WHEN (dtd_calls_call.caller_age < 80) THEN '70 - 79'::text
-            WHEN (dtd_calls_call.caller_age >= 80) THEN '80+'::text
-            ELSE 'None Listed'::text
-        END
-  ORDER BY
-        CASE
-            WHEN (dtd_calls_call.caller_age < 18) THEN '< 18'::text
-            WHEN (dtd_calls_call.caller_age < 30) THEN '18 - 29'::text
-            WHEN (dtd_calls_call.caller_age < 40) THEN '30 - 39'::text
-            WHEN (dtd_calls_call.caller_age < 50) THEN '40 - 49'::text
-            WHEN (dtd_calls_call.caller_age < 60) THEN '50 - 59'::text
-            WHEN (dtd_calls_call.caller_age < 70) THEN '60 - 69'::text
-            WHEN (dtd_calls_call.caller_age < 80) THEN '70 - 79'::text
-            WHEN (dtd_calls_call.caller_age >= 80) THEN '80+'::text
-            ELSE 'None Listed'::text
-        END;
+SELECT
+      CASE
+         WHEN (dtd_calls_call.caller_age < 18) THEN '< 18'::text
+         WHEN (dtd_calls_call.caller_age < 30) THEN '18 - 29'::text
+         WHEN (dtd_calls_call.caller_age < 40) THEN '30 - 39'::text
+         WHEN (dtd_calls_call.caller_age < 50) THEN '40 - 49'::text
+         WHEN (dtd_calls_call.caller_age < 60) THEN '50 - 59'::text
+         WHEN (dtd_calls_call.caller_age < 70) THEN '60 - 69'::text
+         WHEN (dtd_calls_call.caller_age < 80) THEN '70 - 79'::text
+         WHEN (dtd_calls_call.caller_age >= 80) THEN '80+'::text
+         ELSE 'None Listed'::text
+      END AS age_category,
+   count(*) AS calls
+FROM dtd_calls_call
+GROUP BY
+      CASE
+         WHEN (dtd_calls_call.caller_age < 18) THEN '< 18'::text
+         WHEN (dtd_calls_call.caller_age < 30) THEN '18 - 29'::text
+         WHEN (dtd_calls_call.caller_age < 40) THEN '30 - 39'::text
+         WHEN (dtd_calls_call.caller_age < 50) THEN '40 - 49'::text
+         WHEN (dtd_calls_call.caller_age < 60) THEN '50 - 59'::text
+         WHEN (dtd_calls_call.caller_age < 70) THEN '60 - 69'::text
+         WHEN (dtd_calls_call.caller_age < 80) THEN '70 - 79'::text
+         WHEN (dtd_calls_call.caller_age >= 80) THEN '80+'::text
+         ELSE 'None Listed'::text
+      END
+ORDER BY
+      CASE
+         WHEN (dtd_calls_call.caller_age < 18) THEN '< 18'::text
+         WHEN (dtd_calls_call.caller_age < 30) THEN '18 - 29'::text
+         WHEN (dtd_calls_call.caller_age < 40) THEN '30 - 39'::text
+         WHEN (dtd_calls_call.caller_age < 50) THEN '40 - 49'::text
+         WHEN (dtd_calls_call.caller_age < 60) THEN '50 - 59'::text
+         WHEN (dtd_calls_call.caller_age < 70) THEN '60 - 69'::text
+         WHEN (dtd_calls_call.caller_age < 80) THEN '70 - 79'::text
+         WHEN (dtd_calls_call.caller_age >= 80) THEN '80+'::text
+         ELSE 'None Listed'::text
+      END;
 ```
 
 #### Calls by Gender
@@ -331,11 +331,11 @@ Table Name: calls_by_gender
 SQL:
 
 ```sql
-   SELECT dtd_calls_call.caller_gender,
-      count(*) AS calls
-      FROM dtd_calls_call
-   GROUP BY dtd_calls_call.caller_gender
-   ORDER BY dtd_calls_call.caller_gender;
+SELECT dtd_calls_call.caller_gender,
+   count(*) AS calls
+   FROM dtd_calls_call
+GROUP BY dtd_calls_call.caller_gender
+ORDER BY dtd_calls_call.caller_gender;
 ```
 
 #### Calls by Zip
@@ -345,11 +345,11 @@ Table Name: calls_by_zip
 SQL:
 
 ```sql
-   SELECT dtd_calls_call.caller_zip,
-      count(*) AS calls
-   FROM dtd_calls_call
-   GROUP BY dtd_calls_call.caller_zip
-   ORDER BY dtd_calls_call.caller_zip;
+SELECT dtd_calls_call.caller_zip,
+   count(*) AS calls
+FROM dtd_calls_call
+GROUP BY dtd_calls_call.caller_zip
+ORDER BY dtd_calls_call.caller_zip;
 ```
 
 #### Weekly Counts
@@ -359,97 +359,237 @@ Table Name: weekly_counts
 SQL:
 
 ```sql
-   SELECT calls.week,
-    (calls.calls + online_requests.online_requests) AS all_requests,
-    (calls.calls_referred + online_requests.online_requests_referred) AS all_requests_referred,
-    calls.calls,
-    calls.calls_referred,
-    online_requests.online_requests,
-    online_requests.online_requests_referred
-   FROM (
-      (
-         SELECT (date_trunc('week'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date AS week,
-            count(*) AS calls,
-            count(CASE WHEN dtd_calls_call.client_referred THEN 1 ELSE NULL::integer END) AS calls_referred
-         FROM dtd_calls_call
-         WHERE ((dtd_calls_call.call_type)::text = 'Incoming'::text)
-         GROUP BY ((date_trunc('week'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date)
-         ORDER BY ((date_trunc('week'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date)
-      ) calls
-      LEFT JOIN (
-        SELECT (date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date AS week,
-            count(*) AS online_requests,
-            sum(CASE WHEN req.referred THEN 1 ELSE NULL::integer END) AS online_requests_referred
-         FROM (
-            SELECT req_1.created_at,
-               req_1.id,
-               (sum(CASE WHEN ((res.status)::text = 'REFERRED'::text) THEN 1 ELSE 0 END) > 0) AS referred
-               FROM (
-                  dtd_request_request req_1
-                  LEFT JOIN dtd_request_response res ON ((req_1.id = res.request_id)))
-                  GROUP BY req_1.id
-               ) req
-          GROUP BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date)
-          ORDER BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date)
-      ) online_requests
-      ON ((calls.week = online_requests.week))
-   );
+SELECT calls.week,
+   (calls.calls + online_requests.online_requests) AS all_requests,
+   (calls.calls_referred + online_requests.online_requests_referred) AS all_requests_referred,
+   calls.calls,
+   calls.calls_referred,
+   online_requests.online_requests,
+   online_requests.online_requests_referred
+FROM (
+   (
+      SELECT (date_trunc('week'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date AS week,
+         count(*) AS calls,
+         count(CASE WHEN dtd_calls_call.client_referred THEN 1 ELSE NULL::integer END) AS calls_referred
+      FROM dtd_calls_call
+      WHERE ((dtd_calls_call.call_type)::text = 'Incoming'::text)
+      GROUP BY ((date_trunc('week'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date)
+      ORDER BY ((date_trunc('week'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date)
+   ) calls
+   LEFT JOIN (
+      SELECT (date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date AS week,
+         count(*) AS online_requests,
+         sum(CASE WHEN req.referred THEN 1 ELSE NULL::integer END) AS online_requests_referred
+      FROM (
+         SELECT req_1.created_at,
+            req_1.id,
+            (sum(CASE WHEN ((res.status)::text = 'REFERRED'::text) THEN 1 ELSE 0 END) > 0) AS referred
+            FROM (
+               dtd_request_request req_1
+               LEFT JOIN dtd_request_response res ON ((req_1.id = res.request_id)))
+               GROUP BY req_1.id
+            ) req
+         GROUP BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date)
+         ORDER BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date)
+   ) online_requests
+   ON ((calls.week = online_requests.week))
+);
 ```
 
 #### Weekly Domain Counts
 
 Description: By week and domain, the number of all requests (incoming calls + online requests), incoming calls, online requests, and the number of each that is associated with a referral.
-Table Name: weekly_counts
+Table Name: weekly_domain_counts
 SQL:
 
 ```sql
-   SELECT COALESCE(calls.week, online_requests.week) AS week,
-      COALESCE(calls.label, online_requests.label) AS domain,
-      (COALESCE(calls.calls, (0)::bigint) + COALESCE(online_requests.online_requests, (0)::bigint)) AS all_requests,
-      (COALESCE(calls.calls_referred, (0)::bigint) + COALESCE(online_requests.online_requests_referred, (0)::bigint)) AS all_requests_referred,
-      COALESCE(calls.calls, (0)::bigint) AS calls,
-      COALESCE(calls.calls_referred, (0)::bigint) AS calls_referred,
-      COALESCE(online_requests.online_requests, (0)::bigint) AS online_requests,
-      COALESCE(online_requests.online_requests_referred, (0)::bigint) AS online_requests_referred
-   FROM (
-      (
-         SELECT (date_trunc('week'::text, (call.created_at - '05:00:00'::interval)))::date AS week,
-            domain_mapping.label,
-            count(*) AS calls,
-            count(CASE WHEN call.client_referred THEN 1 ELSE NULL::integer END) AS calls_referred
-         FROM ((dtd_calls_call call
-            LEFT JOIN dtd_calls_domain domain ON ((call.id = domain.call_id)))
-            LEFT JOIN domain_mapping ON ((COALESCE(domain.domain, 0) = domain_mapping.id)))
-         WHERE ((call.call_type)::text = 'Incoming'::text)
-         GROUP BY ((date_trunc('week'::text, (call.created_at - '05:00:00'::interval)))::date), domain_mapping.label
-         ORDER BY ((date_trunc('week'::text, (call.created_at - '05:00:00'::interval)))::date), domain_mapping.label
-      ) calls
-      FULL JOIN (
-         SELECT (date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date AS week,
-            domain_mapping.label,
-            count(*) AS online_requests,
-            sum(CASE WHEN req.referred THEN 1 ELSE NULL::integer END) AS online_requests_referred
-            FROM (
+SELECT COALESCE(calls.week, online_requests.week) AS week,
+   COALESCE(calls.label, online_requests.label) AS domain,
+   (COALESCE(calls.calls, (0)::bigint) + COALESCE(online_requests.online_requests, (0)::bigint)) AS all_requests,
+   (COALESCE(calls.calls_referred, (0)::bigint) + COALESCE(online_requests.online_requests_referred, (0)::bigint)) AS all_requests_referred,
+   COALESCE(calls.calls, (0)::bigint) AS calls,
+   COALESCE(calls.calls_referred, (0)::bigint) AS calls_referred,
+   COALESCE(online_requests.online_requests, (0)::bigint) AS online_requests,
+   COALESCE(online_requests.online_requests_referred, (0)::bigint) AS online_requests_referred
+FROM (
+   (
+      SELECT (date_trunc('week'::text, (call.created_at - '05:00:00'::interval)))::date AS week,
+         domain_mapping.label,
+         count(*) AS calls,
+         count(CASE WHEN call.client_referred THEN 1 ELSE NULL::integer END) AS calls_referred
+      FROM ((dtd_calls_call call
+         LEFT JOIN dtd_calls_domain domain ON ((call.id = domain.call_id)))
+         LEFT JOIN domain_mapping ON ((COALESCE(domain.domain, 0) = domain_mapping.id)))
+      WHERE ((call.call_type)::text = 'Incoming'::text)
+      GROUP BY ((date_trunc('week'::text, (call.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+      ORDER BY ((date_trunc('week'::text, (call.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+   ) calls
+   FULL JOIN (
+      SELECT (date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date AS week,
+         domain_mapping.label,
+         count(*) AS online_requests,
+         sum(CASE WHEN req.referred THEN 1 ELSE NULL::integer END) AS online_requests_referred
+         FROM (
+            (
                (
-                  (
-                     SELECT req_1.created_at,
-                        req_1.id,
-                        (sum(CASE WHEN ((res.status)::text = 'REFERRED'::text) THEN 1 ELSE 0 END) > 0) AS referred
-                     FROM (
-                        dtd_request_request req_1
-                        LEFT JOIN dtd_request_response res ON ((req_1.id = res.request_id))
-                     )
-                     GROUP BY req_1.id
-                  ) req
-                  LEFT JOIN dtd_request_domain domain ON ((req.id = domain.request_id))
-               )
-               LEFT JOIN domain_mapping ON ((COALESCE(domain.domain, 0) = domain_mapping.id))
+                  SELECT req_1.created_at,
+                     req_1.id,
+                     (sum(CASE WHEN ((res.status)::text = 'REFERRED'::text) THEN 1 ELSE 0 END) > 0) AS referred
+                  FROM (
+                     dtd_request_request req_1
+                     LEFT JOIN dtd_request_response res ON ((req_1.id = res.request_id))
+                  )
+                  GROUP BY req_1.id
+               ) req
+               LEFT JOIN dtd_request_domain domain ON ((req.id = domain.request_id))
             )
-            GROUP BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date), domain_mapping.label
-            ORDER BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date), domain_mapping.label
-      ) online_requests
-      ON (((calls.week = online_requests.week) AND ((calls.label)::text = (online_requests.label)::text)))
-   );
+            LEFT JOIN domain_mapping ON ((COALESCE(domain.domain, 0) = domain_mapping.id))
+         )
+         GROUP BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+         ORDER BY ((date_trunc('week'::text, (req.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+   ) online_requests
+   ON (((calls.week = online_requests.week) AND ((calls.label)::text = (online_requests.label)::text)))
+);
+```
+
+#### Monthly Counts
+
+Description: By month, the number of all requests (incoming calls + online requests), incoming calls, online requests, and the number of each that is associated with a referral.
+Table Name: monthly_counts
+SQL:
+
+```sql
+SELECT calls.month,
+   (calls.calls + online_requests.online_requests) AS all_requests,
+   (calls.calls_referred + online_requests.online_requests_referred) AS all_requests_referred,
+   calls.calls,
+   calls.calls_referred,
+   online_requests.online_requests,
+   online_requests.online_requests_referred
+FROM (
+   (
+      SELECT (date_trunc('month'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date AS month,
+         count(*) AS calls,
+         count(CASE WHEN dtd_calls_call.client_referred THEN 1 ELSE NULL::integer END) AS calls_referred
+      FROM dtd_calls_call
+      WHERE ((dtd_calls_call.call_type)::text = 'Incoming'::text)
+      GROUP BY ((date_trunc('month'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date)
+      ORDER BY ((date_trunc('month'::text, (dtd_calls_call.created_at - '05:00:00'::interval)))::date)
+   ) calls
+   LEFT JOIN (
+      SELECT (date_trunc('month'::text, (req.created_at - '05:00:00'::interval)))::date AS month,
+         count(*) AS online_requests,
+         sum(CASE WHEN req.referred THEN 1 ELSE NULL::integer END) AS online_requests_referred
+      FROM (
+         SELECT req_1.created_at,
+            req_1.id,
+            (sum(CASE WHEN ((res.status)::text = 'REFERRED'::text) THEN 1 ELSE 0 END) > 0) AS referred
+         FROM (dtd_request_request req_1
+         LEFT JOIN dtd_request_response res ON ((req_1.id = res.request_id)))
+         GROUP BY req_1.id
+      ) req
+      GROUP BY ((date_trunc('month'::text, (req.created_at - '05:00:00'::interval)))::date)
+      ORDER BY ((date_trunc('month'::text, (req.created_at - '05:00:00'::interval)))::date)
+   ) online_requests
+   ON ((calls.month = online_requests.month))
+);
+```
+
+#### Monthly Domain Counts
+
+Description: By month and domain, the number of all requests (incoming calls + online requests), incoming calls, online requests, and the number of each that is associated with a referral.
+Table Name: monthly_domain_counts
+SQL:
+
+```sql
+SELECT COALESCE(calls.month, online_requests.month) AS month,
+    COALESCE(calls.label, online_requests.label) AS domain,
+    (COALESCE(calls.calls, (0)::bigint) + COALESCE(online_requests.online_requests, (0)::bigint)) AS all_requests,
+    (COALESCE(calls.calls_referred, (0)::bigint) + COALESCE(online_requests.online_requests_referred, (0)::bigint)) AS all_requests_referred,
+    COALESCE(calls.calls, (0)::bigint) AS calls,
+    COALESCE(calls.calls_referred, (0)::bigint) AS calls_referred,
+    COALESCE(online_requests.online_requests, (0)::bigint) AS online_requests,
+    COALESCE(online_requests.online_requests_referred, (0)::bigint) AS online_requests_referred
+FROM (
+   (
+      SELECT (date_trunc('month'::text, (call.created_at - '05:00:00'::interval)))::date AS month,
+         domain_mapping.label,
+         count(*) AS calls,
+         count(CASE WHEN call.client_referred THEN 1 ELSE NULL::integer END) AS calls_referred
+      FROM (
+         (
+            dtd_calls_call call
+            LEFT JOIN dtd_calls_domain domain ON ((call.id = domain.call_id))
+         )
+         LEFT JOIN domain_mapping ON ((COALESCE(domain.domain, 0) = domain_mapping.id))
+      )
+      WHERE ((call.call_type)::text = 'Incoming'::text)
+      GROUP BY ((date_trunc('month'::text, (call.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+      ORDER BY ((date_trunc('month'::text, (call.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+   ) calls
+   FULL JOIN (
+      SELECT (date_trunc('month'::text, (req.created_at - '05:00:00'::interval)))::date AS month,
+         domain_mapping.label,
+         count(*) AS online_requests,
+         sum(CASE WHEN req.referred THEN 1 ELSE NULL::integer END) AS online_requests_referred
+      FROM (
+         (
+            (
+               SELECT req_1.created_at,
+                  req_1.id,
+                  (sum(CASE WHEN ((res.status)::text = 'REFERRED'::text) THEN 1 ELSE 0 END) > 0) AS referred
+               FROM (
+                  dtd_request_request req_1
+                  LEFT JOIN dtd_request_response res ON ((req_1.id = res.request_id))
+               )
+               GROUP BY req_1.id
+            ) req
+            LEFT JOIN dtd_request_domain domain ON ((req.id = domain.request_id))
+         )
+         LEFT JOIN domain_mapping ON ((COALESCE(domain.domain, 0) = domain_mapping.id))
+      )
+      GROUP BY ((date_trunc('month'::text, (req.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+      ORDER BY ((date_trunc('month'::text, (req.created_at - '05:00:00'::interval)))::date), domain_mapping.label
+   ) online_requests
+   ON (((calls.month = online_requests.month) AND ((calls.label)::text = (online_requests.label)::text)))
+);
+```
+
+#### Cumulative Counts
+
+Description: For all time, the number of all requests (incoming calls + online requests), incoming calls, online requests, and the number of each that is associated with a referral.
+Table Name: cumulative_counts
+SQL:
+
+```sql
+SELECT (now() - '05:00:00'::interval) AS "timestamp",
+   (calls.calls + online_requests.online_requests) AS all_requests,
+   (calls.calls_referred + online_requests.online_requests_referred) AS all_requests_referred,
+   calls.calls,
+   calls.calls_referred,
+   online_requests.online_requests,
+   online_requests.online_requests_referred
+FROM (
+   (
+      SELECT count(*) AS calls,
+         count(CASE WHEN dtd_calls_call.client_referred THEN 1 ELSE NULL::integer END) AS calls_referred
+      FROM dtd_calls_call
+      WHERE ((dtd_calls_call.call_type)::text = 'Incoming'::text)
+   ) calls
+   CROSS JOIN (
+      SELECT count(*) AS online_requests,
+         sum(CASE WHEN ref.referred THEN 1 ELSE NULL::integer END) AS online_requests_referred
+      FROM (
+         SELECT req.id,
+            (sum(CASE WHEN ((res.status)::text = 'REFERRED'::text) THEN 1 ELSE 0 END) > 0) AS referred
+         FROM (
+            dtd_request_request req
+            LEFT JOIN dtd_request_response res ON ((req.id = res.request_id))
+         )
+         GROUP BY req.id
+      ) ref
+   ) online_requests
+);
 ```
 
 ## Deployment
