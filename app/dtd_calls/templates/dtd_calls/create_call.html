@@ -23,17 +23,17 @@
       <div class="col-6">
         <div class="form-group">
           {{ form.started_at.label_tag }}
-          <div class="input-group date" id="startDateTimePicker" data-target-input="nearest">
+          <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
             <input 
               type="text"
               name="{{ form.started_at.name }}"
               id="{{ form.started_at.id_for_label }}"
               class="form-control datetimepicker-input"
-              data-target="#startDateTimePicker"
+              data-target="#datetimepicker2"
               placeholder="{{ form.started_at.help_text|safe }}"
               readonly
               required>
-              <div class="input-group-append" data-target="#startDateTimePicker" data-toggle="datetimepicker">
+              <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
                 <div class="input-group-text">
                   <img src="{% static 'dtd_request/icons/svg/calendar.svg' %}" class="img-fluid" style="width:1.5em;height:1.3rem;" alt="Override">
                 </div>
@@ -50,17 +50,17 @@
       <div class="col-6">
         <div class="form-group">
           {{ form.ended_at.label_tag }}
-          <div class="input-group date" id="endDateTimePicker" data-target-input="nearest">
+          <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
             <input 
               type="text"
               name="{{ form.ended_at.name }}"
               id="{{ form.ended_at.id_for_label }}"
               class="form-control datetimepicker-input"
-              data-target="#endDateTimePicker"
+              data-target="#datetimepicker3"
               placeholder="{{ form.ended_at.help_text|safe }}"
               readonly
               required>
-              <div class="input-group-append" data-target="#endDateTimePicker" data-toggle="datetimepicker">
+              <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
                 <div class="input-group-text">
                   <img src="{% static 'dtd_request/icons/svg/calendar.svg' %}" class="img-fluid" style="width:1.5em;height:1.3rem;" alt="Override">
                 </div>
@@ -456,14 +456,8 @@
       $('#datetimepicker1').datetimepicker({
         format: 'L'
       });
-      $('#startDateTimePicker').datetimepicker();
-      $('#endDateTimePicker').datetimepicker();
-  });
-  $(function () {
-      $('#startDateTimePicker').datetimepicker();
-  });
-  $(function () {
-      $('#endDateTimePicker').datetimepicker();
+      $('#datetimepicker2').datetimepicker();
+      $('#datetimepicker3').datetimepicker();
   });
 </script>
 
