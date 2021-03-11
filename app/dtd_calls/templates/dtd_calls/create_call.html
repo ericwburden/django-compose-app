@@ -456,8 +456,12 @@
       $('#datetimepicker1').datetimepicker({
         format: 'L'
       });
-      $('#datetimepicker2').datetimepicker();
-      $('#datetimepicker3').datetimepicker();
+      $('#datetimepicker2').datetimepicker({
+        ignoreReadonly: true,
+      });
+      $('#datetimepicker3').datetimepicker({
+        ignoreReadonly: true,
+      });
   });
 </script>
 
