@@ -3,7 +3,7 @@ import logging
 from .forms import CallForm, UpdateCallForm, CallDomainFormset, CallStatusFormset
 from .models import Call, Agency, CallStatus
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
@@ -105,3 +105,8 @@ class CallListView(LoginRequiredMixin, ListView):
     template_name = "dtd_calls/list_call.html"
     paginate_by = 25
     ordering = ["-created_at"]
+
+def pulse(request):
+    now = datetime.now()
+    html = f"<html><body>{now}</body></html>"
+    return HttpResponse(html)

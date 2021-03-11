@@ -10,4 +10,5 @@ urlpatterns = [
     path("<int:pk>/", views.CallDetailView.as_view(), name="call_detail"),
     path("update/<int:pk>/", views.CallUpdateView.as_view(), name="call_update"),
     path("all/", views.CallListView.as_view(), name="call_list"),
+    path("pulse/", views.pulse, name="call_pulse"),
 ]
