@@ -23,15 +23,21 @@
       <div class="col-6">
         <div class="form-group">
           {{ form.started_at.label_tag }}
-          <div class="input-group">
+          <div class="input-group date" id="startDateTimePicker" data-target-input="nearest">
             <input 
               type="text"
               name="{{ form.started_at.name }}"
               id="{{ form.started_at.id_for_label }}"
-              class="form-control"
+              class="form-control datetimepicker-input"
+              data-target="#startDateTimePicker"
               placeholder="{{ form.started_at.help_text|safe }}"
               readonly
               required>
+              <div class="input-group-append" data-target="#startDateTimePicker" data-toggle="datetimepicker">
+                <div class="input-group-text">
+                  <img src="{% static 'dtd_request/icons/svg/calendar.svg' %}" class="img-fluid" style="width:1.5em;height:1.3rem;" alt="Override">
+                </div>
+              </div>
               <div class="input-group-append">
                 <button class="btn btn-success" type="button" id="setStart">Set</button>
               </div>
@@ -44,15 +50,21 @@
       <div class="col-6">
         <div class="form-group">
           {{ form.ended_at.label_tag }}
-          <div class="input-group">
+          <div class="input-group date" id="endDateTimePicker" data-target-input="nearest">
             <input 
               type="text"
               name="{{ form.ended_at.name }}"
               id="{{ form.ended_at.id_for_label }}"
-              class="form-control"
+              class="form-control datetimepicker-input"
+              data-target="#endDateTimePicker"
               placeholder="{{ form.ended_at.help_text|safe }}"
               readonly
               required>
+              <div class="input-group-append" data-target="#endDateTimePicker" data-toggle="datetimepicker">
+                <div class="input-group-text">
+                  <img src="{% static 'dtd_request/icons/svg/calendar.svg' %}" class="img-fluid" style="width:1.5em;height:1.3rem;" alt="Override">
+                </div>
+              </div>
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id="setEnd" disabled>Set</button>
               </div>
@@ -444,6 +456,12 @@
       $('#datetimepicker1').datetimepicker({
         format: 'L'
       });
+  });
+  $(function () {
+      $('#startDateTimePicker').datetimepicker();
+  });
+  $(function () {
+      $('#endDateTimePicker').datetimepicker();
   });
 </script>
 
