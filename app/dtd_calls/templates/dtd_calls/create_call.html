@@ -331,6 +331,17 @@
   });
 </script>
 
+<!-- Script for keeping the form alive over long time periods -->
+<script>
+  function keepAlive() {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('GET', "/staticfiles/dtd_request/icons/svg/plus-white.svg");
+    httpRequest.send(null);
+  }
+
+  setInterval(keepAlive, 300000);  // Ping every five minutes
+</script>
+
 <!-- Script for adding/removing domain selectors-->
 <script>
   function updateElementIndex(el, prefix, ndx) {
