@@ -1,4 +1,4 @@
-# Project Title
+# Web App Template with Django and Docker-Compose
 
 This project makes it quick and simple to develop a docker-composed Django application
 locally and deploy to a remote server for production use. The default application is a
